@@ -1,6 +1,6 @@
 {
-  "name": "Journal PWA",
-  "short_name": "Journal",
+  "name": "Diary PWA",
+  "short_name": "Diary",
   "icons": [
 	{
 		"src": "icons/icon192px.png",

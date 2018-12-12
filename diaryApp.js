@@ -14,7 +14,7 @@ function id(el) {
 	log: null,
 	logIndex: null,
 	tags: [],
-	listName: 'Journal',
+	listName: 'Diary',
 	searchTag: null,
 	searchText: null,
 	lastSave: null,
@@ -135,7 +135,7 @@ function id(el) {
   
   document.getElementById('buttonCancelSearch').addEventListener('click', function() { // CANCEL SEARCH
 	app.logList=app.logs;
-	id('heading').textContent="Journal";
+	id('heading').textContent="Diary";
     app.toggleDialog('searchDialog', false);
 	app.populateList();
   });
@@ -436,7 +436,7 @@ function id(el) {
 
   // START-UP CODE
   var defaultData = {
-	  logs: [{text: 'a journal entry', date:'2018-01-01', days:1, tags: []}]
+	  logs: [{text: 'a diary entry', date:'2018-01-01', days:1, tags: []}]
   }
 	var request = window.indexedDB.open("journalDB");
 	request.onsuccess = function(event) {
@@ -495,7 +495,9 @@ function id(el) {
 	if (navigator.serviceWorker.controller) {
 		console.log('Active service worker found, no need to register')
 	} else { //Register the ServiceWorker
-		navigator.serviceWorker.register('sw.js').then(function(reg) {
+		navigator.serviceWorker.register('diarySW.js', {
+			scope: '/Diary/'
+		}).then(function(reg) {
 			console.log('Service worker has been registered for scope:'+ reg.scope);
 		});
 	}
