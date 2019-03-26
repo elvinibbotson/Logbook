@@ -221,27 +221,6 @@ function id(el) {
 		};
 		request.onerror = function(event) {console.log("error updating log "+app.log.id);};
 	}
-		/* old code - populateLogList now sorts into date order
-		console.log("insert new log");
-		var i=0;
-		var found=false;
-		while((i<app.logList.length) && !found) {
-			console.log("log "+i+" date: "+app.logList[i].date);
-			if(app.logList[i].date<=app.log.date) found=true;
-			else i++;
-		}
-		app.logList.splice(i,0,app.log);
-		// app.logList.push(app.log);
-		if(app.logs.length>250) app.logs.pop(); // discard oldest logs
-	}
-	else if(app.resort) {
-		console.log("date changed: re-sort logs");
-		app.logs.sort(function(a,b) { return Date.parse(b.date)-Date.parse(a.date)}); // reverse date order (latest first)
-	}
-	console.log("date: "+id('logDateField').value);
-	app.populateList();
-	app.saveLogs();
-	*/
   });
 
   document.getElementById('buttonCancelLog').addEventListener('click', function() { // CANCEL NEW/EDIT LOG
@@ -277,6 +256,7 @@ function id(el) {
 
   // SHOW/HIDE DIALOGS
   app.toggleDialog = function(d, visible) {
+  	id('buttonNew').style.display=(visible)?'none':'block';
 	  if(d=='searchDialog') { // toggle search dialog
 	  	 if (visible) {
       		id("searchDialog").classList.add('dialog-container--visible');
