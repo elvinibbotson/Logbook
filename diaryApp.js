@@ -422,11 +422,11 @@ function id(el) {
 	request.onsuccess = function(event) {
 		// console.log("request: "+request);
 		app.db=event.target.result;
-		console.log("DB open");
+		alert("DB open");
 		var dbTransaction = app.db.transaction('logs',"readwrite");
-		console.log("indexedDB transaction ready");
+		alert("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore('logs');
-		console.log("indexedDB objectStore ready");
+		alert("indexedDB objectStore ready");
 		// code to read logs from database
 		app.logs=[];
 		console.log("logs array ready");
@@ -440,7 +440,7 @@ function id(el) {
     			}
 			else {
 				console.log("No more entries!");
-				console.log(app.logs.length+" logs");
+				alert(app.logs.length+" logs");
 				app.logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
 				for(var i in app.logs) { // populate tagChooser
 	  				// console.log("log "+i+" has  "+app.logs[i].tags.length+" tags");
