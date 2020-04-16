@@ -16,10 +16,8 @@
 <body>
 
 <header class="header">
-	<button id="buttonMenu" type="menu" menu="menu" class="headerButton" aria-label="Menu"></button>
     <h1 id="heading" class="header__title">Diary</h1>
     <button id="buttonSearch" class="headerButton" aria-label="Search"></button>
-    <!--button id="buttonNew" class="headerButton" aria-label="New"></button-->
 </header>
 
 <main id="main" class="main">
@@ -30,22 +28,15 @@
 		<div id='buttonNew' class='round-button'><img src='newButton24px.svg'/></div>
     </div>
 </main>
-
-<menu type="context" id="menu">
-	<p><menuitem id="import">import</menuitem></p>
-	<p><menuitem id="export">export</menuitem></p>
-  </menu>
   
-  <div id="importDialog" class="dialog-container">
-	<div class="dialog">
-		<div class="dialog-title">Load from saved file</div>
-		<input type="file" id="fileChooser">
-		<div class="dialog-body">Imported data will replace any records you already have.</div>
-    		<div class="dialog-buttons">
-			<button id="buttonCancelImport" class="button">Cancel</button>
-    		</div>
+<div id="importDialog" class="dialog">
+	<div class="dialog-title">Load from saved file</div>
+	<input type="file" id="fileChooser">
+	<div class="dialog-body">Imported data will replace any records you already have.</div>
+    <div class="dialog-buttons">
+		<button id="buttonCancelImport" class="button">Cancel</button>
 	</div>
-  </div>
+</div>
 
 <div id="searchDialog" class="dialog-container">
 	<div class="dialog">
