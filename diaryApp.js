@@ -100,7 +100,7 @@ id('buttonSaveLog').addEventListener('click', function() {
 	log.days=id('logDaysField').value;
 	log.text=id('logTextField').value;
     toggleDialog('logDialog',false);
-	console.log("save log - date: "+log.date+" "+days+" days text: "+log.text);
+	console.log("save log - date: "+log.date+" "+log.days+" days text: "+log.text);
 	var dbTransaction=db.transaction('logs',"readwrite");
 	console.log("indexedDB transaction ready");
 	var dbObjectStore=dbTransaction.objectStore('logs');
@@ -387,49 +387,49 @@ function backup() {
 lastSave=window.localStorage.getItem('lastSave'); // get month of last backup
 var request=window.indexedDB.open("journalDB");
 request.onsuccess = function(event) {
-// console.log("request: "+request);
-db=event.target.result;
-console.log("DB open");
-var dbTransaction=db.transaction('logs',"readwrite");
-console.log("indexedDB transaction ready");
-var dbObjectStore=dbTransaction.objectStore('logs');
-console.log("indexedDB objectStore ready");
-// code to read logs from database
-logs=[];
-console.log("logs array ready");
-var request=dbObjectStore.openCursor();
-request.onsuccess = function(event) {  
-	var cursor=event.target.result;  
-    if (cursor) {
-		logs.push(cursor.value);
-		cursor.continue();  
-    }
-	else {
-		console.log("No more entries!");
-		console.log(logs.length+" logs");
-		if(logs.length<1) { // no logs: offer to restore backup
-		    id('importDialog').style.display='block';
-		    return
-		}
-		logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
-		for(var i in logs) { // populate tagChooser
-  			for(var j in logs[i].tags) { // for each tag in each log...
-				if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
-					tags.push(logs[i].tags[j]); // ...add it
-				}
-			}
-  		}
-  		tags.sort(); // sort tags alphabetically and populate tag choosers
-  		for(i in tags) {
-  			var tag=document.createElement('option');
-			tag.text=tags[i];
-			tag=document.createElement('option');
-			tag.text=tags[i];
-			id('searchTagChooser').options.add(tag);
-  		}
-		populateList();
-		}
-	};
+    db=event.target.result;
+    console.log("DB open");
+    var dbTransaction=db.transaction('logs',"readwrite");
+    console.log("indexedDB transaction ready");
+    var dbObjectStore=dbTransaction.objectStore('logs');
+    console.log("indexedDB objectStore ready");
+    // code to read logs from database
+    logs=[];
+    console.log("logs array ready");
+    var request=dbObjectStore.openCursor();
+    request.onsuccess = function(event) {  
+	    var cursor=event.target.result;  
+        if (cursor) {
+		    logs.push(cursor.value);
+	    	cursor.continue();  
+        }
+	    else {
+		    console.log("No more entries!");
+		    console.log(logs.length+" logs");
+		    if(logs.length<1) { // no logs: offer to restore backup
+		        id('importDialog').style.display='block';
+		        return
+		    }
+		    logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
+		    for(var i in logs) { // populate tagChooser
+  			    for(var j in logs[i].tags) { // for each tag in each log...
+				    if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
+					    tags.push(logs[i].tags[j]); // ...add it
+				    }
+			    }
+  		    }
+  		    tags.sort(); // sort tags alphabetically and populate tag choosers
+  		    for(i in tags) {
+  			    var tag=document.createElement('option');
+			    tag.text=tags[i];
+			    tag=document.createElement('option');
+			    tag.text=tags[i];
+			    id('searchTagChooser').options.add(tag);
+			    id('tagChooser').options.add(tag);
+  		    }
+		    populateList();
+	    }
+    };
 };
 request.onupgradeneeded=function(event) {
 	var dbObjectStore = event.currentTarget.result.createObjectStore("logs", { keyPath: "id", autoIncrement: true });
