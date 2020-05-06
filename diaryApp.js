@@ -24,6 +24,7 @@ id('buttonSearch').addEventListener('click', function() { // show the search dia
 	toggleDialog('searchDialog',true);
 	id('searchTagChooser').selectedIndex=-1;
 	id('searchTextField').value="";
+	console.log('search - tags: '+id('searchTagChooser').options.length);
 });
 
 // EXECUTE SEARCH
@@ -161,40 +162,41 @@ id('buttonCancelDelete').addEventListener('click', function() {
 
 // SHOW/HIDE DIALOGS
 function  toggleDialog(d, visible) {
+    console.log('toggle '+d+' - '+visible);
   	id('buttonNew').style.display=(visible)?'none':'block';
 	if(d=='searchDialog') { // toggle search dialog
 	    if(visible) {
-      		id("searchDialog").classList.add('dialog-container--visible');
+      		id("searchDialog").style.display='block';
     	} else {
-      		id("searchDialog").classList.remove('dialog-container--visible');
+      		id("searchDialog").style.display='none';
     	}
 	}
 	else if(d=='logDialog') { // toggle log dialog
 	    if (visible) {
-      		id("logDialog").classList.add('dialog-container--visible');
+      		id("logDialog").style.display='block';
     	} else {
-      		id("logDialog").classList.remove('dialog-container--visible');
+      		id("logDialog").style.display='none';
     	}
 	}
 	else if(d=='tagDialog') { // toggle TAGS dialog
 	  	if (visible) {
-      		id('tagDialog').classList.add('dialog-container--visible');
+      		id('tagDialog').style.display='block';
    		} else {
-     		id('tagDialog').classList.remove('dialog-container--visible');
+     		id('tagDialog').style.display='none';
     	}
 	}
 	else if(d=='deleteDialog') { // toggle DELETE dialog
 	  	if(visible) {
-      		id('deleteDialog').classList.add('dialog-container--visible');
+      		id('deleteDialog').style.display='block';
    		} else {
-     		id('deleteDialog').classList.remove('dialog-container--visible');
+     		id('deleteDialog').style.display='none';
     	}
 	}
 	else if(d=='importDialog') { // toggle file chooser dialog
 	  	if(visible) {
-      		id('importDialog').classList.add('dialog-container--visible');
+      		id('importDialog').style.display='block';
     	} else {
-      		id('importDialog').classList.remove('dialog-container--visible');
+      		id('importDialog').style.display='none';
     	}
 	}
 }
@@ -274,8 +276,9 @@ function populateList() {
 			console.log("list "+logs.length+" logs");
 			logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
 			if(searchTag || searchText) {
-				id('heading').textContent=searchTag+"/"+searchText;
+				id('headerTitle').textContent=searchTag+"/"+searchText;
 			}
+			else id('headerTitle').textContent='Diary';
 			console.log("populate list");
 			id('list').innerHTML=""; // clear list
 			var html="";
@@ -286,7 +289,7 @@ function populateList() {
 				listItem.index=i;
 	 		 	listItem.classList.add('log-item');
 				listItem.addEventListener('click', function(){logIndex=this.index; openLog();});
-				html=logs[i].text+"<br>";
+				html="<span class='log-text'>"+logs[i].text+"</span><br>";
 				d=logs[i].date;
 				mon=parseInt(d.substr(5,2))-1;
 				mon*=3;
@@ -341,6 +344,7 @@ id("fileChooser").addEventListener('change',function() {
   
 // CANCEL IMPORT DATA
 id('buttonCancelImport').addEventListener('click',function() {
+    console.log('cancel import');
     toggleDialog('importDialog', false);
 });
 
@@ -407,7 +411,7 @@ request.onsuccess = function(event) {
 		    console.log("No more entries!");
 		    console.log(logs.length+" logs");
 		    if(logs.length<1) { // no logs: offer to restore backup
-		        id('importDialog').style.display='block';
+		        toggleDialog('importDialog',true);
 		        return
 		    }
 		    logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
@@ -420,13 +424,18 @@ request.onsuccess = function(event) {
   		    }
   		    tags.sort(); // sort tags alphabetically and populate tag choosers
   		    for(i in tags) {
-  			    var tag=document.createElement('option');
+			    var tag=document.createElement('option');
 			    tag.text=tags[i];
 			    tag=document.createElement('option');
 			    tag.text=tags[i];
-			    id('searchTagChooser').options.add(tag);
 			    id('tagChooser').options.add(tag);
+			    var stag=document.createElement('option');
+			    stag.text=tags[i];
+			    stag=document.createElement('option');
+			    stag.text=tags[i];
+			    id('searchTagChooser').options.add(stag);
   		    }
+  		    console.log('search tags: '+id('searchTagChooser').options.length);
 		    populateList();
 	    }
     };

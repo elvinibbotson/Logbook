@@ -3,30 +3,27 @@
 
 <head>
 	<meta charset="utf-8">
-  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
   	<title>Diary</title>
   	<link rel="stylesheet" type="text/css" href="diaryStyles.css">
   	<link rel="manifest" href="diaryManifest.json">
   	<meta name="application-name" content="Diary">
   	<meta name="msapplication-square150x150logo" content="icons/icon150px.png">
-  	<meta name="msapplication-square70x70logo" content="icons/icon75px.png"-->
+  	<meta name="msapplication-square70x70logo" content="icons/icon75px.png">
 </head>
 
 <body>
 
 <header class="header">
-    <h1 id="heading" class="header__title">Diary</h1>
-    <button id="buttonSearch" class="headerButton" aria-label="Search"></button>
+    <div id="heading">
+        <span id="headerTitle">Diary</span>
+        <button id="buttonSearch"></button>
+    </div>
 </header>
 
-<main id="main" class="main">
-   <div class="container">
-        <div id="main" class="content">
-			<ul id="list" class="logList"></ul>
-        </div>
-		<div id='buttonNew' class='round-button'><img src='newButton24px.svg'/></div>
-    </div>
+<main id="main">
+	<ul id="list" class="logList"></ul>
+	<div id='buttonNew' class='round-button'><img src='newButton24px.svg'/></div>
 </main>
   
 <div id="importDialog" class="dialog">
@@ -34,54 +31,47 @@
 	<input type="file" id="fileChooser">
 	<div class="dialog-body">Imported data will replace any records you already have.</div>
     <div class="dialog-buttons">
-		<button id="buttonCancelImport" class="button">Cancel</button>
+		<button id="buttonCancelImport" class="cancel-button"></button>
 	</div>
 </div>
 
-<div id="searchDialog" class="dialog-container">
-	<div class="dialog">
-		<div class="dialog-title">Search</div>
-		<div class="dialog-body">by tag: <select id="searchTagChooser"></select>
-		<p>by text: <input type="text" id="searchTextField" size="10"/></p></div>
-		<div class="dialog-buttons">
-			<button id="buttonCancelSearch" class="button">Cancel</button>
-			<button id="buttonStartSearch" class="button">Search</button>
-		</div>
+<div id="searchDialog" class="dialog">
+	<div class="dialog-title">Search</div>
+	<div class="dialog-body">by tag: <select id="searchTagChooser"></select>
+	<p>by text: <input type="text" id="searchTextField" size="10"/></p></div>
+	<div class="dialog-buttons">
+		<button id="buttonCancelSearch" class="cancel-button"></button>
+		<button id="buttonStartSearch" class="search-button"></button>
 	</div>
 </div>
 
- <div id="logDialog" class="dialog-container">
-    <div class="dialog">
-      <div class="dialog-body">date <input type="date" id="logDateField"/> <input type="number" id="logDaysField" width="32"/> days</div>
-      <div class="dialog-body"> <textarea id="logTextField"></textarea>
-	  <ul id="logTagList" class='tag-list'></ul></div>
-      <div class="dialog-buttons">
-	  	<button id="buttonDeleteLog" class="deleteButton">Delete</button>
-	  	<button id="buttonCancelLog" class="button">Cancel</button>
-      	<button id="buttonSaveLog" class="button">Save</button>  
-      </div>
+<div id="logDialog" class="dialog">
+    <div class="dialog-body">date <input type="date" id="logDateField"/> <input type="number" id="logDaysField" width="32"/> days</div>
+    <div class="dialog-body"> <textarea id="logTextField"></textarea>
+	<ul id="logTagList" class='tag-list'></ul></div>
+    <div class="dialog-buttons">
+	    <button id="buttonDeleteLog" class="delete-button"></button>
+	  	<button id="buttonCancelLog" class="cancel-button"></button>
+      	<button id="buttonSaveLog" class="save-button"></button>  
+    </div>
+</div>
+
+<div id="tagDialog" class="dialog">
+	<div class="dialog-body">choose a tag: <select id="tagChooser"></select>
+	    <p>or a new tag: <input type="text" id="newTagField" size="10"/></p>
+	    <div class="dialog-buttons">
+		    <button id="buttonCancelTags" class="cancel-button"></button>
+		    </div>
 	</div>
 </div>
 
-<div id="tagDialog" class="dialog-container">
-	<div class="dialog">
-		<div class="dialog-body">choose a tag: <select id="tagChooser"></select>
-		<p>or a new tag: <input type="text" id="newTagField" size="10"/></p></div>
-		<div class="dialog-buttons">
-			<button id="buttonCancelTags" class="button">Cancel</button>
-		</div>
+<div id="deleteDialog" class="dialog">
+	<div class="dialog-title">Delete</div>
+	<div  id="deleteText" class="dialog-body">text</div>
+	<div class="dialog-buttons">
+        <button id="buttonDeleteConfirm" class="delete-button"></button>
+       	<button id="buttonCancelDelete" class="cancel-button"></button>
 	</div>
-</div>
-
-<div id="deleteDialog" class="dialog-container">
-  	<div class="dialog">
-		<div class="dialog-title">Delete</div>
-		<div  id="deleteText" class="dialog-body">text</div>
-		<div class="dialog-buttons">
-       	 	<button id="buttonDeleteConfirm" class="deleteButton">Delete</button>
-       		<button id="buttonCancelDelete" class="button">Cancel</button>
-		 </div>
-      </div>
  </div>
 
  <script src="diaryApp.js" async></script>
