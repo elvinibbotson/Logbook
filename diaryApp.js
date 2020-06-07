@@ -389,7 +389,7 @@ function backup() {
 
 // START-UP CODE
 lastSave=window.localStorage.getItem('lastSave'); // get month of last backup
-alert('lastSave: '+lastSave);
+console.log('lastSave: '+lastSave);
 var request=window.indexedDB.open("journalDB");
 request.onsuccess = function(event) {
     db=event.target.result;
