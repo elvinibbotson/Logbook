@@ -305,7 +305,7 @@ function populateList() {
 		  		id('list').appendChild(listItem);
   			}
   			var today=new Date();
-  			console.log("this month: "+today.getMonth()+"; lastSave: "+lastSave);
+  			alert("this month: "+today.getMonth()+"; lastSave: "+lastSave);
 	        if(today.getMonth()!=lastSave) backup(); // backup every month
   		}
 	}
@@ -391,7 +391,7 @@ function backup() {
 lastSave=window.localStorage.getItem('lastSave'); // get month of last backup
 console.log('lastSave: '+lastSave);
 var request=window.indexedDB.open("journalDB");
-request.onsuccess = function(event) {
+request.onsuccess=function(event) {
     db=event.target.result;
     console.log("DB open");
     var dbTransaction=db.transaction('logs',"readwrite");
@@ -458,3 +458,4 @@ if (navigator.serviceWorker.controller) {
 		console.log('Service worker has been registered for scope:'+ reg.scope);
 	});
 }
+      
