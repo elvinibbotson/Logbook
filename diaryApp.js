@@ -304,9 +304,12 @@ function populateList() {
 				listItem.innerHTML=html;
 		  		id('list').appendChild(listItem);
   			}
-  			var today=new Date();
-  			alert("this month: "+today.getMonth()+"; lastSave: "+lastSave);
-	        if(today.getMonth()!=lastSave) backup(); // backup every month
+  			// var today=new Date();
+  			// alert("this month: "+today.getMonth()+"; lastSave: "+lastSave);
+	        // if(today.getMonth()!=lastSave) backup(); // backup every month
+	        var thisMonth=new Date().getMonth();
+	        alert('thisMonth:'+thisMonth+' lastSave:'+lastSave);
+	        if(thisMonth!=lastSave) backup(); // monthly backups
   		}
 	}
 	request.onerror=function(event) {
