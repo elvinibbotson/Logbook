@@ -385,13 +385,13 @@ function backup() {
 			alert(fileName+" saved to downloads folder");
 			var today=new Date();
 			lastSave=today.getMonth();
-			window.localStorage.setItem('lastSave',lastSave); // remember month of backup
+			window.localStorage.setItem('diarySave',lastSave); // remember month of backup
 		}
 	}
 }
 
 // START-UP CODE
-lastSave=window.localStorage.getItem('lastSave'); // get month of last backup
+lastSave=window.localStorage.getItem('diarySave'); // get month of last backup
 console.log('lastSave: '+lastSave);
 var request=window.indexedDB.open("journalDB");
 request.onsuccess=function(event) {
