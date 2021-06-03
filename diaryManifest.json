@@ -1,16 +1,12 @@
 {
-  "name": "Diary PWA",
-  "short_name": "Diary",
+  "name": "pepys PWA",
+  "short_name": "pepys",
   "icons": [
 	{
-		"src": "icons/diary192px.png",
+		"src": "pepys.png",
 		"sizes": "192x192",
-		"type": "image/png"
-	},
-	{
-		"src": "icons/diary512px.png",
-		"sizes": "512x512",
-		"type": "image/png"
+		"type": "image/png",
+		"purpose": "any maskable"
 	}
   ],
   "start_url": "index.html",
