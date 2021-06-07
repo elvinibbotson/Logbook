@@ -3,7 +3,7 @@
   "short_name": "pepys",
   "icons": [
 	{
-		"src": "pepys151.png",
+		"src": "pepys512.png",
 		"sizes": "512x512",
 		"type": "image/png",
 		"purpose": "any maskable"
