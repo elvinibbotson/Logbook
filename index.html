@@ -23,15 +23,6 @@
 	<ul id="list" class="logList"></ul>
 	<div id='buttonNew' class='round-button'><img src='newButton24px.svg'/></div>
 </main>
-  
-<div id="importDialog" class="dialog">
-	<div class="dialog-title">Load from saved file</div>
-	<input type="file" id="fileChooser">
-	<div class="dialog-body">Imported data will replace any records you already have.</div>
-    <div class="dialog-buttons">
-		<button id="buttonCancelImport" class="cancel-button"></button>
-	</div>
-</div>
 
 <div id="searchDialog" class="dialog">
 	<div class="dialog-title">Search</div>
@@ -71,6 +62,21 @@
        	<button id="buttonCancelDelete" class="cancel-button"></button>
 	</div>
  </div>
+ 
+ <div id='dataDialog' class='dialog'>
+	<button id='backupButton' class='text-button'>BACKUP</button>
+	<button id='importButton' class='text-button'>IMPORT</button>
+	<button id='dataCancelButton' class='text-button'>CANCEL</button>
+</div>
+
+<div id="importDialog" class="dialog">
+	<div class="dialog-title">Load from file</div>
+	<input type="file" id="fileChooser">
+	<div class="dialog-body">Imported data will replace any records you already have.</div>
+    <div class="dialog-buttons">
+		<button id="buttonCancelImport" class="cancel-button"></button>
+	</div>
+</div>
 
  <script src="diaryApp.js" async></script>
 

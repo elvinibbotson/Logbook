@@ -19,6 +19,11 @@ months="JanFebMarAprMayJunJulAugSepOctNovDec";
 
 // EVENT LISTENERS
 
+// TAP ON HEADER
+id('heading').addEventListener('click',function() {
+	toggleDialog('dataDialog',true);
+});
+
 // SEARCH BUTTON
 id('buttonSearch').addEventListener('click', function() { // show the search dialog
 	toggleDialog('searchDialog',true);
@@ -192,6 +197,13 @@ function  toggleDialog(d, visible) {
      		id('deleteDialog').style.display='none';
     	}
 	}
+	else if(d=='dataDialog') {
+	  	if(visible) {
+      		id('dataDialog').style.display='block';
+    	} else {
+      		id('dataDialog').style.display='none';
+    	}
+	}
 	else if(d=='importDialog') { // toggle file chooser dialog
 	  	if(visible) {
       		id('importDialog').style.display='block';
@@ -315,7 +327,12 @@ function populateList() {
 		console.log("cursor request failed");
 	}
 }
-  
+
+// DATA
+id('backupButton').addEventListener('click',function() {toggleDialog('dataDialog',false); backup();});
+id('importButton').addEventListener('click',function() {toggleDialog('importDialog',true)});
+id('dataCancelButton').addEventListener('click',function() {toggleDialog('dataDialog',false)});
+
 // IMPORT FILE
 id("fileChooser").addEventListener('change',function() {
     var file=id('fileChooser').files[0];
