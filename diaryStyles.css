@@ -51,6 +51,7 @@ input {
 #fileChooser {
 	margin: 20px;
 	font-size: 1.5em;
+	background-color: gray;
 }
 
 textarea {
@@ -111,7 +112,7 @@ textarea {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
-  background-color: black;
+  background-color: &333;
 }
   
 .text-button {
