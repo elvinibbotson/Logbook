@@ -49,7 +49,7 @@ input {
 }
 
 #fileChooser {
-	margin: 20px;
+	height: 30px;
 	font-size: 1.5em;
 	background-color: gray;
 }
