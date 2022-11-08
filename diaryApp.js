@@ -11,7 +11,6 @@ logs=[];
 log=null;
 logIndex=null;
 tags=[];
-listName='Diary';
 searchTag=null;
 searchText=null;
 lastSave=-1;
@@ -290,7 +289,7 @@ function populateList() {
 			if(searchTag || searchText) {
 				id('headerTitle').textContent=searchTag+"/"+searchText;
 			}
-			else id('headerTitle').textContent='Diary';
+			else id('headerTitle').textContent='Pepys';
 			console.log("populate list");
 			id('list').innerHTML=""; // clear list
 			var html="";
@@ -316,9 +315,6 @@ function populateList() {
 				listItem.innerHTML=html;
 		  		id('list').appendChild(listItem);
   			}
-  			// var today=new Date();
-  			// alert("this month: "+today.getMonth()+"; lastSave: "+lastSave);
-	        // if(today.getMonth()!=lastSave) backup(); // backup every month
 	        var thisMonth=new Date().getMonth();
 	        if(thisMonth!=lastSave) backup(); // monthly backups
   		}
