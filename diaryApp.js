@@ -6,6 +6,8 @@ function id(el) {
 'use strict';
 	
 // GLOBAL VARIABLES	
+var dragStart={};
+var drag={};
 db=null;
 logs=[];
 log=null;
@@ -13,10 +15,26 @@ logIndex=null;
 tags=[];
 searchTag=null;
 searchText=null;
+currentDialog=null;
 lastSave=-1;
 months="JanFebMarAprMayJunJulAugSepOctNovDec";
 
 // EVENT LISTENERS
+
+// SWIPE LEFT TO CLOSE DIALOGS
+id('main').addEventListener('touchstart', function(event) {
+    // console.log(event.changedTouches.length+" touches");
+    dragStart.x=event.changedTouches[0].clientX;
+    dragStart.y=event.changedTouches[0].clientY;
+})
+
+id('main').addEventListener('touchend', function(event) {
+    var drag={};
+    drag.x=dragStart.x-event.changedTouches[0].clientX;
+    drag.y=dragStart.y-event.changedTouches[0].clientY;
+    if(Math.abs(drag.y)>50) return; // ignore vertical drags
+    if((drag.x>50)&&(currentDialog)) toggleDialog(currentDialog,false); // drag left to close dialogs
+})
 
 // TAP ON HEADER
 id('heading').addEventListener('click',function() {
@@ -40,14 +58,14 @@ id('buttonStartSearch').addEventListener('click', function() {
     toggleDialog('searchDialog', false);
 });
 
-// CANCEL SEARCH
+/* CANCEL SEARCH
 id('buttonCancelSearch').addEventListener('click', function() {
 	logList=logs;
 	id('heading').textContent="Diary";
     toggleDialog('searchDialog', false);
 	populateList();
 });
-
+*/
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -60,8 +78,9 @@ id('buttonNew').addEventListener('click', function() { // show the log dialog
 	log.tags=[];
 	listLogTags();
 	logIndex=null;
-	id("buttonDeleteLog").disabled=true;
-	id('buttonDeleteLog').style.color='gray';
+	id("buttonDeleteLog").style.display='none';
+	id('buttonSaveLog').style.display='none';
+	id('buttonAddLog').style.display='block';
 });
 
 // CHOOSE A TAG
@@ -74,6 +93,7 @@ id('tagChooser').addEventListener('change', function() {
 		listLogTags();
 	}
     toggleDialog('tagDialog',false);
+    toggleDialog('logDialog',true);
 });
 
 // INPUT NEW TAG
@@ -94,13 +114,23 @@ id('newTagField').addEventListener('change', function() {
 	toggleDialog('tagDialog',false);
 });
 
-// CANCEL NEW TAG
+/* CANCEL NEW TAG
 id('buttonCancelTags').addEventListener('click', function() {
     toggleDialog('tagDialog', false);
 });
+*/
+// ADD NEW LOG
+id('buttonAddLog').addEventListener('click',function() {
+	saveLog(true);
+})
 
-// SAVE NEW/EDITED LOG
+// UPDATE LOG
 id('buttonSaveLog').addEventListener('click', function() {
+	saveLog(false);
+})
+
+// SAVE LOG
+function saveLog(adding) {
 	log.date=id('logDateField').value;
 	log.days=id('logDaysField').value;
 	log.text=id('logTextField').value;
@@ -111,7 +141,7 @@ id('buttonSaveLog').addEventListener('click', function() {
 	var dbObjectStore=dbTransaction.objectStore('logs');
 	console.log("indexedDB objectStore ready");
 	console.log("save log - logIndex is "+logIndex);
-	if(logIndex==null) { // add new log
+	if(adding) { // add new log
 		var request=dbObjectStore.add(log);
 		request.onsuccess=function(event) {
 			console.log("new log added: "+log.text);
@@ -127,23 +157,32 @@ id('buttonSaveLog').addEventListener('click', function() {
 		};
 		request.onerror = function(event) {console.log("error updating log "+log.id);};
 	}
-});
+};
 
-// CANCEL NEW/EDIT LOG
+/* CANCEL NEW/EDIT LOG
 id('buttonCancelLog').addEventListener('click', function() {
     toggleDialog('logDialog',false); // close add new jotting dialog
 });
-  
+*/  
 // DELETE LOG
 id('buttonDeleteLog').addEventListener('click', function() {
-	var text=log.text; // initiate delete log
-	console.log("delete log "+text);
-	toggleDialog("deleteDialog", true);
-	id('deleteText').innerHTML=text;
-	toggleDialog("logDialog", false);
+	// var text=log.text; // initiate delete log
+	// console.log("delete log "+text);
+	// id('deleteText').innerHTML=text;
+	var dbTransaction=db.transaction("logs","readwrite");
+	console.log("indexedDB transaction ready");
+	var dbObjectStore=dbTransaction.objectStore("logs");
+	var request=dbObjectStore.delete(log.id);
+	request.onsuccess=function(event) {
+		console.log("log "+log.id+" deleted");
+		logs.splice(logIndex,1); // not needed - rebuilding logs anyway
+		populateList();
+	};
+	request.onerror=function(event) {console.log("error deleting log "+log.id);};
+	toggleDialog('logDialog',false);
 });
 
-// CONFIRM DELETE
+/* CONFIRM DELETE
 id('buttonDeleteConfirm').addEventListener('click', function() {
 	console.log("delete log "+logIndex+" - "+log.text); // confirm delete log
 	var dbTransaction=db.transaction("logs","readwrite");
@@ -158,16 +197,21 @@ id('buttonDeleteConfirm').addEventListener('click', function() {
 	request.onerror=function(event) {console.log("error deleting log "+log.id);};
 	toggleDialog('deleteDialog', false);
 });
-
-// CANCEL DELETE
+*/
+/* CANCEL DELETE
 id('buttonCancelDelete').addEventListener('click', function() {
     toggleDialog('deleteDialog', false); // close delete dialog
 });
-
+*/
 // SHOW/HIDE DIALOGS
 function  toggleDialog(d, visible) {
     console.log('toggle '+d+' - '+visible);
-  	id('buttonNew').style.display=(visible)?'none':'block';
+    if(currentDialog) id(currentDialog).style.display='none';
+    if(visible) {
+    	currentDialog=d;
+    	id(d).style.display='block';
+    }
+  	/* id('buttonNew').style.display=(visible)?'none':'block';
 	if(d=='searchDialog') { // toggle search dialog
 	    if(visible) {
       		id("searchDialog").style.display='block';
@@ -210,6 +254,7 @@ function  toggleDialog(d, visible) {
       		id('importDialog').style.display='none';
     	}
 	}
+	*/
 }
 
 // OPEN SELECTED LOG FOR EDITING
@@ -222,8 +267,9 @@ function openLog() {
 	id('logTextField').value=log.text;
 	if(!log.tags) log.tags=[];
 	listLogTags();
-	id('buttonDeleteLog').disabled=false;
-	id('buttonDeleteLog').style.color='red';
+	id('buttonAddLog').style.display='none';
+	id('buttonSaveLog').style.display='block';
+	id('buttonDeleteLog').style.display='block';
 }
   
 // POPULATE LIST OF TAGS FOR CURRENT LOG
@@ -327,7 +373,7 @@ function populateList() {
 // DATA
 id('backupButton').addEventListener('click',function() {toggleDialog('dataDialog',false); backup();});
 id('importButton').addEventListener('click',function() {toggleDialog('importDialog',true)});
-id('dataCancelButton').addEventListener('click',function() {toggleDialog('dataDialog',false)});
+// id('dataCancelButton').addEventListener('click',function() {toggleDialog('dataDialog',false)});
 
 // IMPORT FILE
 id("fileChooser").addEventListener('change',function() {
@@ -357,12 +403,12 @@ id("fileChooser").addEventListener('change',function() {
     fileReader.readAsText(file);
 });
   
-// CANCEL IMPORT DATA
+/* CANCEL IMPORT DATA
 id('buttonCancelImport').addEventListener('click',function() {
     console.log('cancel import');
     toggleDialog('importDialog', false);
 });
-
+*/
 // BACKUP
 function backup() {
   	console.log("save backup");

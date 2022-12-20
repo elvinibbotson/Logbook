@@ -48,12 +48,6 @@ input {
 	border: none;
 }
 
-#fileChooser {
-	height: 30px;
-	font-size: 1.5em;
-	background-color: gray;
-}
-
 textarea {
 	width: 100%;
 	height: 80px;
@@ -62,17 +56,6 @@ textarea {
 	color: white;
 	background-color: black;
 	border: none;
-}
-
-#logDateField {
-	width: 120px;
-	height: 34px;
-	font-family: 'Helvetica', 'Verdana', sans-serif;
-}
-
-#logDaysField {
-	width: 32px;
-	height: 32px;
 }
  
 .header {
@@ -83,36 +66,6 @@ textarea {
   background: black;
   padding: 10px 10px 10px 10px;
   z-index: 100;
-}
-  
-#headerTitle {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-#buttonSearch {
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin-right: 30px;
-    background-color: dimgray;
-    border: none;
-    background: url(searchButton24px.svg) center center no-repeat;
-    z-index: 1000;
- }
-
-#main {
-  padding-top: 50px;
-  width: 100%;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  position: relative;
-  background-color: &333;
 }
   
 .text-button {
@@ -145,11 +98,6 @@ textarea {
 	width: 24px;
 	height: 24px;
 	padding: 13px;
-}
-
-#buttonNew {
-	right: 20px;
-	bottom: 20px;
 }
   
 .logList {
@@ -216,10 +164,6 @@ textarea {
 	color: white;
 	background-color: black;
 }
-.dialog-buttons {
-  padding: 8px !important;
-  float: right;
-}
 
 .tag-list {
 	list-style: none;
@@ -236,15 +180,26 @@ textarea {
 	text-align: center;
 }
 
+.add-button {
+	width: 50px;
+    height: 24px;
+    margin-bottom: 15px;
+    border: none;
+    float: right;
+	background-color: dimgray;
+    background: url(newButton24px.svg) center center no-repeat;
+}
+
 .save-button {
     width: 50px;
     height: 24px;
+    margin-bottom: 15px;
     border: none;
     float: right;
 	background-color: dimgray;
     background: url(okButton24px.svg) center center no-repeat;
 }
-
+/*
 .cancel-button {
     width: 50px;
     height: 24px;
@@ -252,10 +207,11 @@ textarea {
 	background-color: dimgray;
     background: url(cancelButton24px.svg) center center no-repeat;
 }
-
+*/
 .delete-button {
     width: 50px;
     height: 24px;
+    margin-bottom: 15px;
     border: none;
     float: left;
 	background-color: dimgray;
@@ -268,4 +224,56 @@ textarea {
     border: none;
 	background-color: dimgray;
 	background: url(searchButton24px.svg) center center no-repeat;
+}
+
+#main {
+  padding-top: 50px;
+  width: 100%;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background-color: &333;
+}
+
+#headerTitle {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#buttonSearch {
+    width: 24px;
+    height: 24px;
+    float: right;
+    margin-right: 30px;
+    background-color: dimgray;
+    border: none;
+    background: url(searchButton24px.svg) center center no-repeat;
+    z-index: 1000;
+ }
+
+#buttonNew {
+	right: 20px;
+	bottom: 20px;
+}
+
+#logDateField {
+	width: 120px;
+	height: 34px;
+	font-family: 'Helvetica', 'Verdana', sans-serif;
+}
+
+#logDaysField {
+	width: 32px;
+	height: 32px;
+}
+
+#fileChooser {
+	height: 30px;
+	font-size: 1.5em;
+	background-color: gray;
 }
