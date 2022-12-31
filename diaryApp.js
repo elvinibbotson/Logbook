@@ -455,7 +455,7 @@ function backup() {
 // START-UP CODE
 lastSave=window.localStorage.getItem('diarySave'); // get month of last backup
 console.log('lastSave: '+lastSave);
-var request=window.indexedDB.open("journalDB");
+var request=window.indexedDB.open("journalDB",1);
 request.onsuccess=function(event) {
     db=event.target.result;
     console.log("DB open");
