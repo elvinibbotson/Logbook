@@ -507,8 +507,11 @@ request.onsuccess=function(event) {
     };
 };
 request.onupgradeneeded=function(event) {
-	var dbObjectStore = event.currentTarget.result.createObjectStore("logs", { keyPath: "id", autoIncrement: true });
-	console.log("new logs ObjectStore created");
+	db=event.currentTarget.result;
+	if(!db.objectStoreNames.contains('logs')) {
+		var dbObjectStore=db.createObjectStore("logs",{ keyPath:"id",autoIncrement:true });
+		console.log("logs store created");
+	}
 };
 request.onerror=function(event) {
 	alert("indexedDB error");
