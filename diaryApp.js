@@ -58,14 +58,11 @@ id('buttonStartSearch').addEventListener('click', function() {
     toggleDialog('searchDialog', false);
 });
 
-/* CANCEL SEARCH
-id('buttonCancelSearch').addEventListener('click', function() {
-	logList=logs;
-	id('heading').textContent="Diary";
-    toggleDialog('searchDialog', false);
-	populateList();
-});
-*/
+function display(message) {
+	id('message').innerText=message;
+	showDialog('messageDialog',true);
+}
+
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -398,7 +395,7 @@ id("fileChooser").addEventListener('change',function() {
     		request.onerror = function(e) {console.log("error adding log");};
     	}
     	toggleDialog('importDialog',false);
-    	alert("logs imported - restart");
+    	display("logs imported - restart");
     });
     fileReader.readAsText(file);
 });
@@ -444,7 +441,7 @@ function backup() {
    			a.download=fileName;
     		document.body.appendChild(a);
     		a.click();
-			alert(fileName+" saved to downloads folder");
+			display(fileName+" saved to downloads folder");
 			var today=new Date();
 			lastSave=today.getMonth();
 			window.localStorage.setItem('diarySave',lastSave); // remember month of backup
@@ -512,6 +509,8 @@ request.onupgradeneeded=function(event) {
 		var dbObjectStore=db.createObjectStore("logs",{ keyPath:"id",autoIncrement:true });
 		console.log("logs store created");
 	}
+	else console.log("logs store exists");
+	console.log("database ready");
 };
 request.onerror=function(event) {
 	alert("indexedDB error");
