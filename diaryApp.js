@@ -60,7 +60,7 @@ id('buttonStartSearch').addEventListener('click', function() {
 
 function display(message) {
 	id('message').innerText=message;
-	showDialog('messageDialog',true);
+	toggleDialog('messageDialog',true);
 }
 
 // NEW BUTTON
@@ -412,8 +412,12 @@ function backup() {
 	var fileName="diary";
 	var date=new Date();
 	fileName+=date.getFullYear();
-	fileName+=(date.getMonth()+1);
-	fileName+=date.getDate()+".json";
+	var n=date.getMonth()+1;
+	if(n<10) fileName+='0';
+	fileName+=n;
+	n=date.getDate();
+	if(n<10) fieName+='0';
+	fileName+=n+".json";
 	var dbTransaction=db.transaction('logs',"readwrite");
 	console.log("indexedDB transaction ready");
 	var dbObjectStore=dbTransaction.objectStore('logs');
@@ -424,7 +428,7 @@ function backup() {
 		var cursor=event.target.result;  
     	if(cursor) {
 		    logs.push(cursor.value);
-			console.log("log "+cursor.value.id+", date: "+cursor.value.date+", "+cursor.value.text);
+			// console.log("log "+cursor.value.id+", date: "+cursor.value.date+", "+cursor.value.text);
 			cursor.continue();  
     	}
 		else {
