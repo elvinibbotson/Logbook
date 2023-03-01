@@ -37,7 +37,7 @@ id('main').addEventListener('touchend', function(event) {
 })
 
 // TAP ON HEADER
-id('heading').addEventListener('click',function() {
+id('headerTitle').addEventListener('click',function() {
 	toggleDialog('dataDialog',true);
 });
 
