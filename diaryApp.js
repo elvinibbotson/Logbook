@@ -416,7 +416,7 @@ function backup() {
 	if(n<10) fileName+='0';
 	fileName+=n;
 	n=date.getDate();
-	if(n<10) fieName+='0';
+	if(n<10) fileName+='0';
 	fileName+=n+".json";
 	var dbTransaction=db.transaction('logs',"readwrite");
 	console.log("indexedDB transaction ready");
