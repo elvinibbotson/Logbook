@@ -85,19 +85,24 @@ id('tagChooser').addEventListener('change', function() {
 	var n=id('tagChooser').selectedIndex;
 	var tag=id('tagChooser').options.item(n).text;
 	console.log("select tag "+tag);
-	if(log.tags.indexOf(tag)<0) {
+	if(tag.startsWith('+')) { // define a new tag
+		toggleDialog('newTagDialog',true);
+		return;
+	}
+	else if(log.tags.indexOf(tag)<0) {
 		log.tags.push(tag);
 		listLogTags();
 	}
-    toggleDialog('tagDialog',false);
+    // toggleDialog('tagDialog',false);
     toggleDialog('logDialog',true);
 });
 
-// INPUT NEW TAG
+//  INPUT NEW TAG
 id('newTagField').addEventListener('change', function() {
   	var tag=id('newTagField').value;
 	console.log("new tag: "+tag);
 	if(tags.indexOf(tag)<0) {
+		console.log('define new tag: '+tag);
 		tags.push(tag);
 		var opt=document.createElement('option');
 		opt.text=tag;
@@ -106,9 +111,10 @@ id('newTagField').addEventListener('change', function() {
 		opt.text=tag;
 		id('searchTagChooser').options.add(opt);
 		log.tags.push(tag);
+		console.log(tag+' added to tag list, tag search and log tags');
 		listLogTags();
 	}
-	toggleDialog('tagDialog',false);
+	toggleDialog('logDialog',true);
 });
 
 /* CANCEL NEW TAG
@@ -502,6 +508,9 @@ request.onsuccess=function(event) {
 			    stag.text=tags[i];
 			    id('searchTagChooser').options.add(stag);
   		    }
+  		    tag=document.createElement('option');
+  		    tag.text='+NEW';
+  		    id('tagChooser').options.add(tag);
   		    console.log('search tags: '+id('searchTagChooser').options.length);
 		    populateList();
 	    }

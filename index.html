@@ -31,7 +31,6 @@
 	<div class="dialog-body">by tag: <select id="searchTagChooser"></select>
 	<p>by text: <input type="text" id="searchTextField" size="10"/></p></div>
 	<div class="dialog-buttons">
-		<!--button id="buttonCancelSearch" class="cancel-button"></button-->
 		<button id="buttonStartSearch" class="search-button"></button>
 	</div>
 </div>
@@ -42,7 +41,6 @@
 	<ul id="logTagList" class='tag-list'></ul></div>
     <div class="dialog-buttons">
 	    <button id="buttonDeleteLog" class="delete-button"></button>
-	  	<!--button id="buttonCancelLog" class="cancel-button"></button-->
 	  	<button id="buttonAddLog" class="add-button"></button> 
       	<button id="buttonSaveLog" class="save-button"></button>  
     </div>
@@ -50,33 +48,24 @@
 
 <div id="tagDialog" class="dialog">
 	<div class="dialog-body">choose a tag: <select id="tagChooser"></select>
-	    <p>or a new tag: <input type="text" id="newTagField" size="10"/></p>
-	    <div class="dialog-buttons">
-		    <!--button id="buttonCancelTags" class="cancel-button"></button-->
-		    </div>
 	</div>
 </div>
 
-<!--div id="deleteDialog" class="dialog">
-	<div class="dialog-title">Delete</div>
-	<div  id="deleteText" class="dialog-body">text</div>
+<div id='newTagDialog' class='dialog'>
+	<div class="dialog-body">new tag: <input type="text" id="newTagField" size="10"/></div>
 	<div class="dialog-buttons">
-        <button id="buttonDeleteConfirm" class="delete-button"></button>
+		<button id="buttonNewTag" class="add-button"></button>
 	</div>
- </div-->
+</div>
  
  <div id='dataDialog' class='dialog'>
 	<button id='backupButton' class='text-button'>BACKUP</button>
 	<button id='importButton' class='text-button'>IMPORT</button>
-	<!--button id='dataCancelButton' class='text-button'>CANCEL</button-->
 </div>
 
 <div id="importDialog" class="dialog">
 	<div class="dialog-title">Load from file</div>
 	<input type="file" id="fileChooser">
-    <!--div class="dialog-buttons">
-		<button id="buttonCancelImport" class="cancel-button"></button>
-	</div-->
 </div>
 </main>
 <script src="diaryApp.js" async></script>
