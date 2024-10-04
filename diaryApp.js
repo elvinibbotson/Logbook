@@ -16,7 +16,8 @@ tags=[];
 searchTag=null;
 searchText=null;
 currentDialog=null;
-lastSave=-1;
+var thisWeek; // weeks since 1st Sept 1970
+var backupWeek=0; // week of last backup;
 months="JanFebMarAprMayJunJulAugSepOctNovDec";
 
 // EVENT LISTENERS
@@ -364,8 +365,10 @@ function populateList() {
 				listItem.innerHTML=html;
 		  		id('list').appendChild(listItem);
   			}
-	        var thisMonth=new Date().getMonth();
-	        if(thisMonth!=lastSave) backup(); // monthly backups
+  			thisWeek=Math.floor(new Date().getTime()/604800000); // weeks since Jan 1st 1970
+  			if(thisWeek>backupWeek) backup();
+	        // var thisMonth=new Date().getMonth();
+	        // if(thisMonth!=lastSave) backup(); // monthly backups
   		}
 	}
 	request.onerror=function(event) {
@@ -415,15 +418,8 @@ id('buttonCancelImport').addEventListener('click',function() {
 // BACKUP
 function backup() {
   	console.log("save backup");
-	var fileName="diary";
-	var date=new Date();
-	fileName+=date.getFullYear();
-	var n=date.getMonth()+1;
-	if(n<10) fileName+='0';
-	fileName+=n;
-	n=date.getDate();
-	if(n<10) fileName+='0';
-	fileName+=n+".json";
+  	backupWeek=thisWeek;
+  	var fileName="Pepys-"+backupWeek+".json"
 	var dbTransaction=db.transaction('logs',"readwrite");
 	console.log("indexedDB transaction ready");
 	var dbObjectStore=dbTransaction.objectStore('logs');
@@ -452,16 +448,15 @@ function backup() {
     		document.body.appendChild(a);
     		a.click();
 			display(fileName+" saved to downloads folder");
-			var today=new Date();
-			lastSave=today.getMonth();
-			window.localStorage.setItem('diarySave',lastSave); // remember month of backup
+			console.log('save backupWeek: '+backupWeek);
+			window.localStorage.setItem('backupWeek',backupWeek); // remember week of backup...
 		}
 	}
 }
 
 // START-UP CODE
-lastSave=window.localStorage.getItem('diarySave'); // get month of last backup
-console.log('lastSave: '+lastSave);
+backupWeek=window.localStorage.getItem('backupWeek'); // get week of last backup
+console.log('backupWeek: '+backupWeek);
 var request=window.indexedDB.open("journalDB",2);
 request.onsuccess=function(event) {
     db=event.target.result;
