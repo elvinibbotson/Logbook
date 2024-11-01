@@ -44,7 +44,7 @@ input {
 	font-size: 1.2em;
 	height: 24px;
 	color: white;
-	background-color: black;
+	background-color: dimgray;
 	border: none;
 }
 
@@ -54,7 +54,7 @@ textarea {
 	font-family: 'Helvetica', 'Verdana', sans-serif;
 	font-size: 1.2em;
 	color: white;
-	background-color: black;
+	background-color: dimgray;
 	border: none;
 }
  
@@ -63,9 +63,9 @@ textarea {
   width: 100%;
   height: 24px;
   color: white;
-  background: black;
+  background: dimgray;
   padding: 10px 10px 10px 10px;
-  z-index: 100;
+  z-index: 10;
 }
   
 .text-button {
@@ -133,6 +133,7 @@ textarea {
 }
 
 .dialog {
+	/*
   position: fixed;
   left: 0;
   top: 0;
@@ -140,6 +141,19 @@ textarea {
   background: dimgray;
   display: none;
   z-index: 100;
+  */
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	padding: 10px;
+	margin: 10px;
+	border: solid white 2px;
+	border-radius: 10px;
+	color: white;
+	background-color: gray;
+	z-index: 10;
+	display: none;
 }
 
 .dialog > div {
@@ -162,14 +176,14 @@ textarea {
 	height: 32px;
 	font-size: 1em;
 	color: white;
-	background-color: black;
+	background-color: dimgray;
 }
 
 .tag-list {
 	list-style: none;
 	overflow: hidden;
 	color: white;
-	background-color: black;
+	background-color: dimgray;
 	border: none;
 }
 
@@ -274,6 +288,7 @@ textarea {
 
 #fileChooser {
 	height: 30px;
+	width: 100%;
 	font-size: 1.5em;
 	background-color: gray;
 }
