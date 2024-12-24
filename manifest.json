@@ -1,0 +1,17 @@
+{
+  "name": "Logbook PWA",
+  "short_name": "Logbook",
+  "icons": [
+	{
+		"src": "Logbook.png",
+		"sizes": "512x512",
+		"type": "image/png",
+		"purpose": "any maskable"
+	}
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation":"portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
