@@ -162,6 +162,7 @@ function saveLog(adding) {
 	*/
 	if(adding) logs.push(log);
 	else logs[logIndex]=log;
+	populateList();
 };
 
 /* CANCEL NEW/EDIT LOG
