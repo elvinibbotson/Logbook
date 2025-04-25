@@ -253,6 +253,11 @@ textarea {
     background: url(searchButton24px.svg) center center no-repeat;
     z-index: 1000;
  }
+ 
+#buttonStartSearch {
+	margin: 20px;
+	float: right;
+}
 
 #buttonNew {
 	right: 20px;

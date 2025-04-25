@@ -314,6 +314,7 @@ function populateList() {
 	if(searchTag || searchText) id('headerTitle').textContent=searchTag+"/"+searchText;
 	else id('headerTitle').textContent='Logbook';
 	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
+	list=[];
 	for(var i=0;i<logs.length;i++) { // build list of logs to show
 		if(searchTag || searchText) { // list logs matching search
 			if(searchTag && (logs[i].tags.indexOf(searchTag)>=0))
@@ -321,7 +322,7 @@ function populateList() {
 				console.log("search tag match in "+logs[i].text);
 				list.push(i);
 			}
-			else if(searchText && (cursor.value.text.indexOf(searchText)>=0))
+			else if(searchText && (logs[i].text.indexOf(searchText)>=0))
 			{
 				console.log("search text match in "+logs[i].text);
 				list.push(i);
