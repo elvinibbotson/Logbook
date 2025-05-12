@@ -488,8 +488,8 @@ id('buttonCancelImport').addEventListener('click',function() {
 // BACKUP
 function backup() {
   	console.log("save backup");
-  	backupWeek=thisWeek;
-  	var fileName="Logbook-"+backupWeek+".json"
+  	var fileName="LogbookData.json"
+  	/*
 	var dbTransaction=db.transaction('logs',"readwrite");
 	console.log("indexedDB transaction ready");
 	var dbObjectStore=dbTransaction.objectStore('logs');
@@ -504,24 +504,27 @@ function backup() {
 			cursor.continue();  
     	}
 		else {
-			console.log(logs.length+" logs - sort and save");
-    		logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); //chronological order
-			var data={'logs': logs};
-			var json=JSON.stringify(data);
-			var blob=new Blob([json],{type:"data:application/json"});
-  			var a=document.createElement('a');
-			a.style.display='none';
-    		var url=window.URL.createObjectURL(blob);
-			console.log("data ready to save: "+blob.size+" bytes");
-   			a.href=url;
-   			a.download=fileName;
-    		document.body.appendChild(a);
-    		a.click();
-			display(fileName+" saved to downloads folder");
-			console.log('save backupWeek: '+backupWeek);
-			window.localStorage.setItem('backupWeek',backupWeek); // remember week of backup...
-		}
+		*/
+	console.log(logs.length+" logs - sort and save");
+    logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); //chronological order
+	var data={'logs': logs};
+	var json=JSON.stringify(data);
+	var blob=new Blob([json],{type:"data:application/json"});
+  	var a=document.createElement('a');
+	a.style.display='none';
+    var url=window.URL.createObjectURL(blob);
+	console.log("data ready to save: "+blob.size+" bytes");
+   	a.href=url;
+   	a.download=fileName;
+    document.body.appendChild(a);
+    a.click();
+	display(fileName+" saved to downloads folder");
+	/*
+	console.log('save backupWeek: '+backupWeek);
+		window.localStorage.setItem('backupWeek',backupWeek); // remember week of backup...
 	}
+	}
+	*/
 }
 
 // START-UP CODE
@@ -534,7 +537,7 @@ if(logData && logData!='undefined') {
 	// build tag list
 	tags=[];
 	for(var i=0;i<logs.length;i++) {
-		console.log('log '+i+' has '+logs[i].tags.length+' tags');
+		// console.log('log '+i+' has '+logs[i].tags.length+' tags');
 		for(var j in logs[i].tags) { // for each tag in each log...
 			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
 				tags.push(logs[i].tags[j]); // ...add it
