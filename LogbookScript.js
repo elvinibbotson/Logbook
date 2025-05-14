@@ -162,6 +162,8 @@ function saveLog(adding) {
 	*/
 	if(adding) logs.push(log);
 	else logs[logIndex]=log;
+	var data=JSON.stringify(logs);
+	window.localStorage.setItem('logData',data);
 	populateList();
 };
 
@@ -189,6 +191,8 @@ id('buttonDeleteLog').addEventListener('click', function() {
 	*/
 	logs.splice(logIndex,1);
 	toggleDialog('logDialog',false);
+	var data=JSON.stringify(logs);
+	window.localStorage.setItem('logData',data);
 });
 
 /* CONFIRM DELETE
