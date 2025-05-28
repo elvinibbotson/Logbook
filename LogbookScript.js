@@ -2,9 +2,7 @@ function id(el) {
 	// console.log("return element whose id is "+el);
 	return document.getElementById(el);
 }
-
 'use strict';
-	
 // GLOBAL VARIABLES	
 var dragStart={};
 var drag={};
@@ -22,15 +20,15 @@ currentDialog=null;
 // var backupWeek=0; // week of last backup;
 months="JanFebMarAprMayJunJulAugSepOctNovDec";
 
-// EVENT LISTENERS
+var root; // OPFS root directory
 
+// EVENT LISTENERS
 // SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
     // console.log(event.changedTouches.length+" touches");
     dragStart.x=event.changedTouches[0].clientX;
     dragStart.y=event.changedTouches[0].clientY;
 })
-
 id('main').addEventListener('touchend', function(event) {
     var drag={};
     drag.x=dragStart.x-event.changedTouches[0].clientX;
@@ -38,12 +36,10 @@ id('main').addEventListener('touchend', function(event) {
     if(Math.abs(drag.y)>50) return; // ignore vertical drags
     if((drag.x>50)&&(currentDialog)) toggleDialog(currentDialog,false); // drag left to close dialogs
 })
-
 // TAP ON HEADER
 id('headerTitle').addEventListener('click',function() {
 	toggleDialog('dataDialog',true);
 });
-
 // SEARCH BUTTON
 id('buttonSearch').addEventListener('click', function() { // show the search dialog
 	toggleDialog('searchDialog',true);
@@ -51,7 +47,6 @@ id('buttonSearch').addEventListener('click', function() { // show the search dia
 	id('searchTextField').value="";
 	console.log('search - tags: '+id('searchTagChooser').options.length);
 });
-
 // EXECUTE SEARCH
 id('buttonStartSearch').addEventListener('click', function() {
 	searchTag=tags[id('searchTagChooser').selectedIndex];
@@ -60,12 +55,10 @@ id('buttonStartSearch').addEventListener('click', function() {
 	populateList();
     toggleDialog('searchDialog', false);
 });
-
 function display(message) {
 	id('message').innerText=message;
 	toggleDialog('messageDialog',true);
 }
-
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -82,7 +75,6 @@ id('buttonNew').addEventListener('click', function() { // show the log dialog
 	id('buttonSaveLog').style.display='none';
 	id('buttonAddLog').style.display='block';
 });
-
 // CHOOSE A TAG
 id('tagChooser').addEventListener('change', function() {
 	var n=id('tagChooser').selectedIndex;
@@ -99,7 +91,6 @@ id('tagChooser').addEventListener('change', function() {
     // toggleDialog('tagDialog',false);
     toggleDialog('logDialog',true);
 });
-
 //  INPUT NEW TAG
 id('newTagField').addEventListener('change', function() {
   	var tag=id('newTagField').value;
@@ -119,17 +110,14 @@ id('newTagField').addEventListener('change', function() {
 	}
 	toggleDialog('logDialog',true);
 });
-
 // ADD NEW LOG
 id('buttonAddLog').addEventListener('click',function() {
 	saveLog(true);
 })
-
 // UPDATE LOG
 id('buttonSaveLog').addEventListener('click', function() {
 	saveLog(false);
 })
-
 // SAVE LOG
 function saveLog(adding) {
 	log.date=id('logDateField').value;
@@ -137,85 +125,17 @@ function saveLog(adding) {
 	log.text=id('logTextField').value;
     toggleDialog('logDialog',false);
 	console.log("save log - date: "+log.date+" "+log.days+" days text: "+log.text);
-	/*
-	var dbTransaction=db.transaction('logs',"readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore=dbTransaction.objectStore('logs');
-	console.log("indexedDB objectStore ready");
-	console.log("save log - logIndex is "+logIndex);
-	if(adding) { // add new log
-		var request=dbObjectStore.add(log);
-		request.onsuccess=function(event) {
-			console.log("new log added: "+log.text);
-			populateList();
-		};
-		request.onerror=function(event) {console.log("error adding new log");};
-	}
-	else { // update existing log
-		var request=dbObjectStore.put(log); // update log in database
-		request.onsuccess=function(event)  {
-			console.log("log "+log.id+" updated");
-			populateList();
-		};
-		request.onerror = function(event) {console.log("error updating log "+log.id);};
-	}
-	*/
 	if(adding) logs.push(log);
 	else logs[logIndex]=log;
-	var data=JSON.stringify(logs);
-	window.localStorage.setItem('logData',data);
+	writeData();
 	populateList();
 };
-
-/* CANCEL NEW/EDIT LOG
-id('buttonCancelLog').addEventListener('click', function() {
-    toggleDialog('logDialog',false); // close add new jotting dialog
-});
-*/  
 // DELETE LOG
 id('buttonDeleteLog').addEventListener('click', function() {
-	// var text=log.text; // initiate delete log
-	// console.log("delete log "+text);
-	// id('deleteText').innerHTML=text;
-	/*
-	var dbTransaction=db.transaction("logs","readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore=dbTransaction.objectStore("logs");
-	var request=dbObjectStore.delete(log.id);
-	request.onsuccess=function(event) {
-		console.log("log "+log.id+" deleted");
-		logs.splice(logIndex,1); // not needed - rebuilding logs anyway
-		populateList();
-	};
-	request.onerror=function(event) {console.log("error deleting log "+log.id);};
-	*/
 	logs.splice(logIndex,1);
 	toggleDialog('logDialog',false);
-	var data=JSON.stringify(logs);
-	window.localStorage.setItem('logData',data);
+	writeData();
 });
-
-/* CONFIRM DELETE
-id('buttonDeleteConfirm').addEventListener('click', function() {
-	console.log("delete log "+logIndex+" - "+log.text); // confirm delete log
-	var dbTransaction=db.transaction("logs","readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore=dbTransaction.objectStore("logs");
-	var request=dbObjectStore.delete(log.id);
-	request.onsuccess=function(event) {
-		console.log("log "+log.id+" deleted");
-		logs.splice(logIndex,1); // not needed - rebuilding logs anyway
-		populateList();
-	};
-	request.onerror=function(event) {console.log("error deleting log "+log.id);};
-	toggleDialog('deleteDialog', false);
-});
-*/
-/* CANCEL DELETE
-id('buttonCancelDelete').addEventListener('click', function() {
-    toggleDialog('deleteDialog', false); // close delete dialog
-});
-*/
 // SHOW/HIDE DIALOGS
 function  toggleDialog(d, visible) {
     console.log('toggle '+d+' - '+visible);
@@ -269,7 +189,6 @@ function  toggleDialog(d, visible) {
 	}
 	*/
 }
-
 // OPEN SELECTED LOG FOR EDITING
 function openLog() {
 	console.log("open log: "+logIndex);
@@ -284,7 +203,6 @@ function openLog() {
 	id('buttonSaveLog').style.display='block';
 	id('buttonDeleteLog').style.display='block';
 }
-  
 // POPULATE LIST OF TAGS FOR CURRENT LOG
 function listLogTags() {
 	var item=null;
@@ -310,11 +228,9 @@ function listLogTags() {
 		id('logTagList').appendChild(item);
 	}
 }
-  
 // POPULATE LOGS LIST
 function populateList() {
 	console.log("populate log list for search "+searchTag+"/"+searchText);
-	// COMPLETELY NEW CODE...
 	if(searchTag || searchText) id('headerTitle').textContent=searchTag+"/"+searchText;
 	else id('headerTitle').textContent='Logbook';
 	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
@@ -337,6 +253,7 @@ function populateList() {
 			list.push(i);
 		}
 	}
+	console.log('list '+list.length+' logs');
 	id('list').innerHTML=""; // clear list
 	var html="";
 	var d="";
@@ -362,88 +279,10 @@ function populateList() {
 		listItem.innerHTML=html;
 		id('list').appendChild(listItem);
   	}
-	/* OLD CODE...
-
-for(var i=0;i<logs.length;i++) {
-	
 }
-	var dbTransaction=db.transaction('logs',"readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore=dbTransaction.objectStore('logs');
-	console.log("indexedDB objectStore ready");
-	var request=dbObjectStore.openCursor();
-	request.onsuccess=function(event) {  
-		var cursor=event.target.result;  
-    	if(cursor) {
-			if(searchTag || searchText) {
-				if(searchTag && (cursor.value.tags.indexOf(searchTag)>=0))
-				{
-					console.log("search tag match in "+cursor.value.text);
-					logs.push(cursor.value);
-				}
-				else if(searchText && (cursor.value.text.indexOf(searchText)>=0))
-				{
-					console.log("search text match in "+cursor.value.text);
-					logs.push(cursor.value);
-				}
-					
-			}
-			else {
-				console.log("no search");
-				logs.push(cursor.value);
-			}
-			cursor.continue();
-		}
-		else {
-			console.log("list "+logs.length+" logs");
-			logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
-			if(searchTag || searchText) {
-				id('headerTitle').textContent=searchTag+"/"+searchText;
-			}
-			else id('headerTitle').textContent='Logbook';
-			console.log("populate list");
-			id('list').innerHTML=""; // clear list
-			var html="";
-			var d="";
-			var mon=0;
-  			for(var i=logs.length-1; i>=0; i--) { // list latest first
-  			 	var listItem = document.createElement('li');
-				listItem.index=i;
-	 		 	listItem.classList.add('log-item');
-				listItem.addEventListener('click', function(){logIndex=this.index; openLog();});
-				html="<span class='log-text'>"+logs[i].text+"</span><br>";
-				d=logs[i].date;
-				mon=parseInt(d.substr(5,2))-1;
-				mon*=3;
-				d=d.substr(8,2)+" "+months.substr(mon,3)+" "+d.substr(2,2);
-				html+="<span class='log-date'>"+d;
-				if(logs[i].days>1) html+="...<i>"+logs[i].days+" days</i>";
-				html+="</span><span class='log-tags'>";
-				for(var j in logs[i].tags) {
-					html+=logs[i].tags[j]+" "
-				}
-				html+="</span><p>";
-				listItem.innerHTML=html;
-		  		id('list').appendChild(listItem);
-  			}
-  			thisWeek=Math.floor(new Date().getTime()/604800000); // weeks since Jan 1st 1970
-  			if(thisWeek>backupWeek) backup();
-	        // var thisMonth=new Date().getMonth();
-	        // if(thisMonth!=lastSave) backup(); // monthly backups
-  		}
-	}
-	request.onerror=function(event) {
-		console.log("cursor request failed");
-	}
-	*/
-}
-
 // DATA
 id('backupButton').addEventListener('click',function() {toggleDialog('dataDialog',false); backup();});
 id('importButton').addEventListener('click',function() {toggleDialog('importDialog',true)});
-// id('dataCancelButton').addEventListener('click',function() {toggleDialog('dataDialog',false)});
-
-// IMPORT FILE
 id("fileChooser").addEventListener('change',function() {
     var file=id('fileChooser').files[0];
     console.log("file: "+file+" name: "+file.name);
@@ -464,32 +303,12 @@ id("fileChooser").addEventListener('change',function() {
     	}
     	console.log(logs.length+" logs loaded");
     	logData=JSON.stringify(logs);
-    	window.localStorage.setItem('logData',logData);
-    	/*
-    	var dbTransaction=db.transaction('logs',"readwrite");
-    	var dbObjectStore=dbTransaction.objectStore('logs');
-    	for(var i=0;i<logs.length;i++) {
-    		console.log("add "+logs[i].text);
-    		var request = dbObjectStore.add(logs[i]);
-    		request.onsuccess = function(e) {
-    			console.log(logs.length+" logs added to database");
-    		};
-    		request.onerror = function(e) {console.log("error adding log");};
-    	}
-    	*/
+    	writeData();
     	toggleDialog('importDialog',false);
     	display("logs imported - restart");
     });
     fileReader.readAsText(file);
 });
-  
-/* CANCEL IMPORT DATA
-id('buttonCancelImport').addEventListener('click',function() {
-    console.log('cancel import');
-    toggleDialog('importDialog', false);
-});
-*/
-// BACKUP
 function backup() {
   	console.log("save backup");
   	var fileName="LogbookData.json"
@@ -523,120 +342,65 @@ function backup() {
     document.body.appendChild(a);
     a.click();
 	display(fileName+" saved to downloads folder");
-	/*
-	console.log('save backupWeek: '+backupWeek);
-		window.localStorage.setItem('backupWeek',backupWeek); // remember week of backup...
-	}
-	}
-	*/
 }
-
-// START-UP CODE
-// backupWeek=window.localStorage.getItem('backupWeek'); // get week of last backup
-// console.log('backupWeek: '+backupWeek);
-logData=window.localStorage.getItem('logData');
-if(logData && logData!='undefined') {
-	logs=JSON.parse(logData); // restore saved logs
-	console.log(logs.length+' logs restored');
-	// build tag list
-	tags=[];
-	for(var i=0;i<logs.length;i++) {
-		// console.log('log '+i+' has '+logs[i].tags.length+' tags');
-		for(var j in logs[i].tags) { // for each tag in each log...
-			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
-				tags.push(logs[i].tags[j]); // ...add it
-				console.log('tag added');
+async function readData() {
+	root=await navigator.storage.getDirectory();
+	console.log('OPFS root directory: '+root);
+	var handle=await root.getFileHandle('LogbookData');
+	var file=await handle.getFile();
+	var loader=new FileReader();
+    	loader.addEventListener('load',function(evt) {
+        	var data=evt.target.result;
+        	console.log('data: '+data.length+' bytes');
+      		logs=JSON.parse(data);
+      		console.log(logs.length+' logs read');
+      		for(var i in logs) console.log('log '+i+': '+logs[i].text);
+      		// build tag list
+			tags=[];
+			for(var i=0;i<logs.length;i++) {
+				// console.log('log '+i+' has '+logs[i].tags.length+' tags');
+				for(var j in logs[i].tags) { // for each tag in each log...
+					if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
+						tags.push(logs[i].tags[j]); // ...add it
+						console.log('tag added');
+					}
+				}
 			}
-		}
-	}
-	tags.sort(); // sort tags alphabetically and populate tag choosers
-  	for(i in tags) {
-		var tag=document.createElement('option');
-		tag.text=tags[i];
-		tag=document.createElement('option');
-		tag.text=tags[i];
-		id('tagChooser').options.add(tag);
-		var stag=document.createElement('option');
-		stag.text=tags[i];
-		stag=document.createElement('option');
-		stag.text=tags[i];
-		id('searchTagChooser').options.add(stag);
-  	}
-  	tag=document.createElement('option');
-  	tag.text='+NEW';
-  	id('tagChooser').options.add(tag);
-  	console.log('search tags: '+id('searchTagChooser').options.length);
-	populateList();
+			tags.sort(); // sort tags alphabetically and populate tag choosers
+  			for(i in tags) {
+				var tag=document.createElement('option');
+				tag.text=tags[i];
+				tag=document.createElement('option');
+				tag.text=tags[i];
+				id('tagChooser').options.add(tag);
+				var stag=document.createElement('option');
+				stag.text=tags[i];
+				stag=document.createElement('option');
+				stag.text=tags[i];
+				id('searchTagChooser').options.add(stag);
+  			}
+  			tag=document.createElement('option');
+  			tag.text='+NEW';
+  			id('tagChooser').options.add(tag);
+  			console.log('search tags: '+id('searchTagChooser').options.length);
+			populateList();
+    	});
+    	loader.addEventListener('error',function(event) {
+        	console.log('load failed - '+event);
+    	});
+    	loader.readAsText(file);
 }
-else toggleDialog('importDialog',true);
-/*
-var request=window.indexedDB.open("journalDB",2);
-request.onsuccess=function(event) {
-    db=event.target.result;
-    console.log("DB open");
-    var dbTransaction=db.transaction('logs',"readwrite");
-    console.log("indexedDB transaction ready");
-    var dbObjectStore=dbTransaction.objectStore('logs');
-    console.log("indexedDB objectStore ready");
-    // code to read logs from database
-    logs=[];
-    console.log("logs array ready");
-    var request=dbObjectStore.openCursor();
-    request.onsuccess = function(event) {  
-	    var cursor=event.target.result;  
-        if (cursor) {
-		    logs.push(cursor.value);
-	    	cursor.continue();  
-        }
-	    else {
-		    console.log("No more entries!");
-		    console.log(logs.length+" logs");
-		    if(logs.length<1) { // no logs: offer to restore backup
-		        toggleDialog('importDialog',true);
-		        return
-		    }
-		    logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
-		    for(var i in logs) { // populate tagChooser
-  			    for(var j in logs[i].tags) { // for each tag in each log...
-				    if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
-					    tags.push(logs[i].tags[j]); // ...add it
-				    }
-			    }
-  		    }
-  		    tags.sort(); // sort tags alphabetically and populate tag choosers
-  		    for(i in tags) {
-			    var tag=document.createElement('option');
-			    tag.text=tags[i];
-			    tag=document.createElement('option');
-			    tag.text=tags[i];
-			    id('tagChooser').options.add(tag);
-			    var stag=document.createElement('option');
-			    stag.text=tags[i];
-			    stag=document.createElement('option');
-			    stag.text=tags[i];
-			    id('searchTagChooser').options.add(stag);
-  		    }
-  		    tag=document.createElement('option');
-  		    tag.text='+NEW';
-  		    id('tagChooser').options.add(tag);
-  		    console.log('search tags: '+id('searchTagChooser').options.length);
-		    populateList();
-	    }
-    };
-};
-request.onupgradeneeded=function(event) {
-	db=event.currentTarget.result;
-	if(!db.objectStoreNames.contains('logs')) {
-		var dbObjectStore=db.createObjectStore("logs",{ keyPath:"id",autoIncrement:true });
-		console.log("logs store created");
-	}
-	else console.log("logs store exists");
-	console.log("database ready");
-};
-request.onerror=function(event) {
-	alert("indexedDB error");
-};
-*/
+async function writeData() {
+	var handle=await root.getFileHandle('LogbookData',{create:true});
+	// var file=await fileHandle.getFile();
+	var data=JSON.stringify(logs);
+	var writable=await handle.createWritable();
+    await writable.write(data);
+    await writable.close();
+	console.log('data saved to LogbookData');
+}
+// START-UP CODE
+readData();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
