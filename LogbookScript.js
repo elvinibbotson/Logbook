@@ -135,6 +135,7 @@ id('buttonDeleteLog').addEventListener('click', function() {
 	logs.splice(logIndex,1);
 	toggleDialog('logDialog',false);
 	writeData();
+	populateList();
 });
 // SHOW/HIDE DIALOGS
 function  toggleDialog(d, visible) {
