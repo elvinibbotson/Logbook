@@ -16,13 +16,8 @@ tags=[];
 searchTag=null;
 searchText=null;
 currentDialog=null;
-// var thisWeek; // weeks since 1st Sept 1970
-// var backupWeek=0; // week of last backup;
 months="JanFebMarAprMayJunJulAugSepOctNovDec";
-
 var root; // OPFS root directory
-
-// EVENT LISTENERS
 // SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
     // console.log(event.changedTouches.length+" touches");
@@ -145,50 +140,6 @@ function  toggleDialog(d, visible) {
     	currentDialog=d;
     	id(d).style.display='block';
     }
-  	/* id('buttonNew').style.display=(visible)?'none':'block';
-	if(d=='searchDialog') { // toggle search dialog
-	    if(visible) {
-      		id("searchDialog").style.display='block';
-    	} else {
-      		id("searchDialog").style.display='none';
-    	}
-	}
-	else if(d=='logDialog') { // toggle log dialog
-	    if (visible) {
-      		id("logDialog").style.display='block';
-    	} else {
-      		id("logDialog").style.display='none';
-    	}
-	}
-	else if(d=='tagDialog') { // toggle TAGS dialog
-	  	if (visible) {
-      		id('tagDialog').style.display='block';
-   		} else {
-     		id('tagDialog').style.display='none';
-    	}
-	}
-	else if(d=='deleteDialog') { // toggle DELETE dialog
-	  	if(visible) {
-      		id('deleteDialog').style.display='block';
-   		} else {
-     		id('deleteDialog').style.display='none';
-    	}
-	}
-	else if(d=='dataDialog') {
-	  	if(visible) {
-      		id('dataDialog').style.display='block';
-    	} else {
-      		id('dataDialog').style.display='none';
-    	}
-	}
-	else if(d=='importDialog') { // toggle file chooser dialog
-	  	if(visible) {
-      		id('importDialog').style.display='block';
-    	} else {
-      		id('importDialog').style.display='none';
-    	}
-	}
-	*/
 }
 // OPEN SELECTED LOG FOR EDITING
 function openLog() {
@@ -313,22 +264,6 @@ id("fileChooser").addEventListener('change',function() {
 function backup() {
   	console.log("save backup");
   	var fileName="LogbookData.json"
-  	/*
-	var dbTransaction=db.transaction('logs',"readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore=dbTransaction.objectStore('logs');
-	console.log("indexedDB objectStore ready");
-	var logs=[];
-	var request=dbObjectStore.openCursor();
-	request.onsuccess = function(event) {  
-		var cursor=event.target.result;  
-    	if(cursor) {
-		    logs.push(cursor.value);
-			// console.log("log "+cursor.value.id+", date: "+cursor.value.date+", "+cursor.value.text);
-			cursor.continue();  
-    	}
-		else {
-		*/
 	console.log(logs.length+" logs - sort and save");
     logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); //chronological order
 	var data={'logs': logs};
@@ -347,6 +282,8 @@ function backup() {
 async function readData() {
 	root=await navigator.storage.getDirectory();
 	console.log('OPFS root directory: '+root);
+	var persisted=await navigator.storage.persist();
+	console.log('persisted: '+persisted);
 	var handle=await root.getFileHandle('LogbookData');
 	var file=await handle.getFile();
 	var loader=new FileReader();
@@ -393,7 +330,6 @@ async function readData() {
 }
 async function writeData() {
 	var handle=await root.getFileHandle('LogbookData',{create:true});
-	// var file=await fileHandle.getFile();
 	var data=JSON.stringify(logs);
 	var writable=await handle.createWritable();
     await writable.write(data);
