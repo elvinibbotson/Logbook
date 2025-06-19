@@ -7,17 +7,18 @@ function id(el) {
 var dragStart={};
 var drag={};
 // db=null;
-logData=null;
-logs=[]; // all logs
-list=[]; // listed logs
-log=null;
-logIndex=null;
-tags=[];
-searchTag=null;
-searchText=null;
-currentDialog=null;
-months="JanFebMarAprMayJunJulAugSepOctNovDec";
-var root; // OPFS root directory
+var logData=null;
+var logs=[]; // all logs
+var list=[]; // listed logs
+var log=null;
+var logIndex=null;
+var tags=[];
+var searchTag=null;
+var searchText=null;
+var currentDialog=null;
+var months="JanFebMarAprMayJunJulAugSepOctNovDec";
+var backupDay
+// var root; // OPFS root directory
 // SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
     // console.log(event.changedTouches.length+" touches");
@@ -86,7 +87,7 @@ id('tagChooser').addEventListener('change', function() {
     // toggleDialog('tagDialog',false);
     toggleDialog('logDialog',true);
 });
-//  INPUT NEW TAG
+// INPUT NEW TAG
 id('newTagField').addEventListener('change', function() {
   	var tag=id('newTagField').value;
 	console.log("new tag: "+tag);
@@ -233,8 +234,84 @@ function populateList() {
   	}
 }
 // DATA
+async function load() {
+	var data=localStorage.getItem('ledgerData');
+	if(!data) {
+		id('restoreMessage').innerText='no data - restore?';
+		toggleDialog('restoreDialog',true);
+		return;
+	}
+	/* OLD OPFS METHOD
+	root=await navigator.storage.getDirectory();
+	console.log('OPFS root directory: '+root);
+		var persisted=await navigator.storage.persist();
+		console.log('persisted: '+persisted);
+		var handle=await root.getFileHandle('LogbookData');
+		var file=await handle.getFile();
+		var loader=new FileReader();
+    	loader.addEventListener('load',function(evt) {
+        	var data=evt.target.result;
+        	console.log('data: '+data.length+' bytes');
+    	});
+    	loader.addEventListener('error',function(event) {
+        	console.log('load failed - '+event);
+    	});
+    	loader.readAsText(file);
+    */	
+	logs=JSON.parse(data);
+	console.log(logs.length+' logs read');
+	for(var i in logs) console.log('log '+i+': '+logs[i].text);
+	// build tag list
+	tags=[];
+	for(var i=0;i<logs.length;i++) {
+		// console.log('log '+i+' has '+logs[i].tags.length+' tags');
+		for(var j in logs[i].tags) { // for each tag in each log...
+			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
+				tags.push(logs[i].tags[j]); // ...add it
+				console.log('tag added');
+			}
+		}
+	}
+	tags.sort(); // sort tags alphabetically and populate tag choosers
+	for(i in tags) {
+		var tag=document.createElement('option');
+		tag.text=tags[i];
+		tag=document.createElement('option');
+		tag.text=tags[i];
+		id('tagChooser').options.add(tag);
+		var stag=document.createElement('option');
+		stag.text=tags[i];
+		stag=document.createElement('option');
+		stag.text=tags[i];
+		id('searchTagChooser').options.add(stag);
+	}
+	tag=document.createElement('option');
+	tag.text='+NEW';
+	id('tagChooser').options.add(tag);
+	console.log('search tags: '+id('searchTagChooser').options.length);
+	populateList();
+	var today=Math.floor(new Date().getTime()/86400000);
+	var days=today-backupDay;
+	if(days>15) days='ages';
+	if(days>4) { // backup reminder every 5 days
+		id('backupMessage').innerText=days+' since last backup';
+		toggleDialog('backupDialog',true);
+	}
+}
+async function save() {
+	var json=JSON.stringify(logs);
+	window.localStorage.setItem('LogbookData',json);
+	/* OLD OPFS METHOD
+	var handle=await root.getFileHandle('LogbookData',{create:true});
+	var data=JSON.stringify(logs);
+	var writable=await handle.createWritable();
+    await writable.write(data);
+    await writable.close();
+    */
+	console.log('data saved to LogbookData');
+}
 id('backupButton').addEventListener('click',function() {toggleDialog('dataDialog',false); backup();});
-id('importButton').addEventListener('click',function() {toggleDialog('importDialog',true)});
+id('restoreButton').addEventListener('click',function() {toggleDialog('restoreDialog',true)});
 id("fileChooser").addEventListener('change',function() {
     var file=id('fileChooser').files[0];
     console.log("file: "+file+" name: "+file.name);
@@ -243,6 +320,8 @@ id("fileChooser").addEventListener('change',function() {
 	    console.log("file read: "+evt.target.result);
     	var data=evt.target.result;
     	var json=JSON.parse(data);
+    	logs=json.logs;
+    	/*
     	console.log("json: "+json);
     	logs=[];
     	for(var i=0;i<json.logs.length;i++) { // discard redundant log IDs
@@ -253,14 +332,16 @@ id("fileChooser").addEventListener('change',function() {
     		logs[i].text=json.logs[i].text;
     		console.log('log '+i+': '+logs[i].text);
     	}
+    	*/
     	console.log(logs.length+" logs loaded");
     	logData=JSON.stringify(logs);
-    	writeData();
-    	toggleDialog('importDialog',false);
-    	display("logs imported - restart");
+    	save();
+    	toggleDialog('restoreDialog',false);
+    	populateList();
     });
     fileReader.readAsText(file);
 });
+id('confirmBackup').addEventListener('click',backup);
 function backup() {
   	console.log("save backup");
   	var fileName="LogbookData.json"
@@ -279,65 +360,11 @@ function backup() {
     a.click();
 	display(fileName+" saved to downloads folder");
 }
-async function readData() {
-	root=await navigator.storage.getDirectory();
-	console.log('OPFS root directory: '+root);
-	var persisted=await navigator.storage.persist();
-	console.log('persisted: '+persisted);
-	var handle=await root.getFileHandle('LogbookData');
-	var file=await handle.getFile();
-	var loader=new FileReader();
-    	loader.addEventListener('load',function(evt) {
-        	var data=evt.target.result;
-        	console.log('data: '+data.length+' bytes');
-      		logs=JSON.parse(data);
-      		console.log(logs.length+' logs read');
-      		for(var i in logs) console.log('log '+i+': '+logs[i].text);
-      		// build tag list
-			tags=[];
-			for(var i=0;i<logs.length;i++) {
-				// console.log('log '+i+' has '+logs[i].tags.length+' tags');
-				for(var j in logs[i].tags) { // for each tag in each log...
-					if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
-						tags.push(logs[i].tags[j]); // ...add it
-						console.log('tag added');
-					}
-				}
-			}
-			tags.sort(); // sort tags alphabetically and populate tag choosers
-  			for(i in tags) {
-				var tag=document.createElement('option');
-				tag.text=tags[i];
-				tag=document.createElement('option');
-				tag.text=tags[i];
-				id('tagChooser').options.add(tag);
-				var stag=document.createElement('option');
-				stag.text=tags[i];
-				stag=document.createElement('option');
-				stag.text=tags[i];
-				id('searchTagChooser').options.add(stag);
-  			}
-  			tag=document.createElement('option');
-  			tag.text='+NEW';
-  			id('tagChooser').options.add(tag);
-  			console.log('search tags: '+id('searchTagChooser').options.length);
-			populateList();
-    	});
-    	loader.addEventListener('error',function(event) {
-        	console.log('load failed - '+event);
-    	});
-    	loader.readAsText(file);
-}
-async function writeData() {
-	var handle=await root.getFileHandle('LogbookData',{create:true});
-	var data=JSON.stringify(logs);
-	var writable=await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-	console.log('data saved to LogbookData');
-}
 // START-UP CODE
-readData();
+backupDay=window.localStorage.getItem('backupDay');
+if(backupDay) console.log('last backup on day '+backupDay);
+else backupDay=0;
+load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
