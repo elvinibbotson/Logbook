@@ -123,14 +123,14 @@ function saveLog(adding) {
 	console.log("save log - date: "+log.date+" "+log.days+" days text: "+log.text);
 	if(adding) logs.push(log);
 	else logs[logIndex]=log;
-	writeData();
+	save();
 	populateList();
 };
 // DELETE LOG
 id('buttonDeleteLog').addEventListener('click', function() {
 	logs.splice(logIndex,1);
 	toggleDialog('logDialog',false);
-	writeData();
+	save();
 	populateList();
 });
 // SHOW/HIDE DIALOGS
@@ -235,7 +235,7 @@ function populateList() {
 }
 // DATA
 async function load() {
-	var data=localStorage.getItem('ledgerData');
+	var data=localStorage.getItem('LogbookData');
 	if(!data) {
 		id('restoreMessage').innerText='no data - restore?';
 		toggleDialog('restoreDialog',true);
@@ -337,7 +337,7 @@ id("fileChooser").addEventListener('change',function() {
     	logData=JSON.stringify(logs);
     	save();
     	toggleDialog('restoreDialog',false);
-    	populateList();
+    	load();
     });
     fileReader.readAsText(file);
 });
