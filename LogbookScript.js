@@ -17,7 +17,7 @@ var searchTag=null;
 var searchText=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
-var backupDay
+var backupDay;
 // var root; // OPFS root directory
 // SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
@@ -51,10 +51,6 @@ id('buttonStartSearch').addEventListener('click', function() {
 	populateList();
     toggleDialog('searchDialog', false);
 });
-function display(message) {
-	id('message').innerText=message;
-	toggleDialog('messageDialog',true);
-}
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -234,10 +230,9 @@ function populateList() {
   	}
 }
 // DATA
-async function load() {
+function load() {
 	var data=localStorage.getItem('LogbookData');
 	if(!data) {
-		id('restoreMessage').innerText='no data - restore?';
 		toggleDialog('restoreDialog',true);
 		return;
 	}
@@ -298,7 +293,7 @@ async function load() {
 		toggleDialog('backupDialog',true);
 	}
 }
-async function save() {
+function save() {
 	var json=JSON.stringify(logs);
 	window.localStorage.setItem('LogbookData',json);
 	/* OLD OPFS METHOD
