@@ -287,9 +287,8 @@ function load() {
 	populateList();
 	var today=Math.floor(new Date().getTime()/86400000);
 	var days=today-backupDay;
-	if(days>15) days='ages';
 	if(days>4) { // backup reminder every 5 days
-		id('backupMessage').innerText=days+' since last backup';
+		id('backupMessage').innerText=days+' days since last backup';
 		toggleDialog('backupDialog',true);
 	}
 }
@@ -336,7 +335,7 @@ id("fileChooser").addEventListener('change',function() {
     });
     fileReader.readAsText(file);
 });
-id('confirmBackup').addEventListener('click',backup);
+id('confirmBackup').addEventListener('click',function() {toggleDialog('backupDialog',false); backup();});
 function backup() {
   	console.log("save backup");
   	var fileName="LogbookData.json"
