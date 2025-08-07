@@ -136,7 +136,9 @@ function  toggleDialog(d, visible) {
     if(visible) {
     	currentDialog=d;
     	id(d).style.display='block';
+    	id('buttonNew').style.display='none';
     }
+    else id('buttonNew').style.display='block';
 }
 // OPEN SELECTED LOG FOR EDITING
 function openLog() {

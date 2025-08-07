@@ -3,7 +3,7 @@ html, body {
   margin: 0;
   height: 100%;
   width: 100%;
-  font-family: 'Lucida Console', 'Courier', monospace;
+  font-family: 'Courier', monospace;
   font-weight: 400;
   font-display: optional;
   color: #444;
@@ -44,18 +44,24 @@ input {
 	font-size: 1.2em;
 	height: 24px;
 	color: white;
-	background-color: dimgray;
-	border: none;
+	background-color: black;
+	border: 1px solid white;
+}
+
+select {
+	border: solid white 1px;
+	color: yellow;
+	background-color: blue;
 }
 
 textarea {
 	width: 100%;
 	height: 80px;
-	font-family: 'Lucida Console', 'Courier', monospace;
+	font-family: 'Courier', monospace;
 	font-size: 1.2em;
 	color: white;
-	background-color: dimgray;
-	border: none;
+	background-color: black;
+	border: solid white 1px;
 }
  
 .header {
@@ -69,14 +75,13 @@ textarea {
 }
   
 .text-button {
-	border: 2px solid white;
-	border-radius: 10px;
+	border: none;
 	margin: 15px;
 	padding: 5px;
 	font-size:1.2em;
 	font-weight: bold;
 	color: white;
-	background-color:gray;
+	background: none;
 	float: right;
 }
 
@@ -87,9 +92,9 @@ textarea {
 	bottom: 20px;
 	width: 50px;
 	height: 50px;
-	border: 2px solid white;
-	border-radius: 10px;
-	background: gray;
+	border: none;
+	border-radius: 50%;
+	background: black;
 	z-index: 50;
 }
 
@@ -97,7 +102,6 @@ textarea {
 	display: block;
 	width: 24px;
 	height: 24px;
-	padding: 13px;
 }
   
 .logList {
@@ -138,11 +142,8 @@ textarea {
 	right: 0;
 	top: 0;
 	padding: 10px;
-	margin: 10px;
-	border: solid white 2px;
-	border-radius: 10px;
 	color: white;
-	background-color: gray;
+	background-color: black;
 	z-index: 10;
 	display: none;
 }
@@ -174,7 +175,7 @@ textarea {
 	list-style: none;
 	overflow: hidden;
 	color: white;
-	background-color: dimgray;
+	background-color: black;
 	border: none;
 }
 
@@ -191,8 +192,8 @@ textarea {
     margin-bottom: 15px;
     border: none;
     float: right;
-	background-color: dimgray;
-    background: url(newButton24px.svg) center center no-repeat;
+	background-color: black;
+    background: url(add24px.svg) center center no-repeat;
 }
 
 .save-button {
@@ -201,8 +202,8 @@ textarea {
     margin-bottom: 15px;
     border: none;
     float: right;
-	background-color: dimgray;
-    background: url(okButton24px.svg) center center no-repeat;
+	background-color: black;
+    background: url(ok24px.svg) center center no-repeat;
 }
 
 .delete-button {
@@ -211,16 +212,16 @@ textarea {
     margin-bottom: 15px;
     border: none;
     float: left;
-	background-color: dimgray;
-	background: url(deleteButton24px.svg) center center no-repeat;
+	background-color: black;
+	background: url(delete24px.svg) center center no-repeat;
 }
 
 .search-button {
     width: 50px;
     height: 24px;
     border: none;
-	background-color: dimgray;
-	background: url(searchButton24px.svg) center center no-repeat;
+	background-color: black;
+	background: url(search24px.svg) center center no-repeat;
 }
 
 #main {
@@ -234,11 +235,11 @@ textarea {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
-  background-color: dimgray;
+  background-color: #444;
 }
 
 #heading {
-	font-family: 'Lucida Console','Courier',monospace;
+	font-family: 'Courier',monospace;
     font-size: 1.5em;
     font-weight: bold;
 }
@@ -248,9 +249,9 @@ textarea {
     height: 24px;
     float: right;
     margin-right: 30px;
-    background-color: dimgray;
+    background-color: black;
     border: none;
-    background: url(searchButton24px.svg) center center no-repeat;
+    background: url(search24px.svg) center center no-repeat;
     z-index: 1000;
  }
  
@@ -262,12 +263,13 @@ textarea {
 #buttonNew {
 	right: 20px;
 	bottom: 20px;
+	background: url(add.svg) center center no-repeat;
 }
 
 #logDateField {
 	width: 120px;
 	height: 34px;
-	font-family: 'Lucida Console', 'Courier', monospace;
+	font-family: 'Courier', monospace;
 }
 
 #logDaysField {
@@ -279,5 +281,9 @@ textarea {
 	height: 30px;
 	width: 100%;
 	font-size: 1.5em;
-	background-color: gray;
+	background-color: black;
+}
+
+#tagChooser {
+	background-color: black;
 }
