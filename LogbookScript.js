@@ -235,26 +235,11 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('LogbookData');
 	if(!data) {
-		toggleDialog('restoreDialog',true);
+		id('dataMessage').innerText='no data - restore backup?';
+		id('backupButton').disabled=true;
+		toggleDialog('dataDialog',true);
 		return;
 	}
-	/* OLD OPFS METHOD
-	root=await navigator.storage.getDirectory();
-	console.log('OPFS root directory: '+root);
-		var persisted=await navigator.storage.persist();
-		console.log('persisted: '+persisted);
-		var handle=await root.getFileHandle('LogbookData');
-		var file=await handle.getFile();
-		var loader=new FileReader();
-    	loader.addEventListener('load',function(evt) {
-        	var data=evt.target.result;
-        	console.log('data: '+data.length+' bytes');
-    	});
-    	loader.addEventListener('error',function(event) {
-        	console.log('load failed - '+event);
-    	});
-    	loader.readAsText(file);
-    */	
 	logs=JSON.parse(data);
 	console.log(logs.length+' logs read');
 	for(var i in logs) console.log('log '+i+': '+logs[i].text);
@@ -290,8 +275,9 @@ function load() {
 	var today=Math.floor(new Date().getTime()/86400000);
 	var days=today-backupDay;
 	if(days>4) { // backup reminder every 5 days
-		id('backupMessage').innerText=days+' days since last backup';
-		toggleDialog('backupDialog',true);
+		id('dataMessage').innerText=days+' days since last backup';
+		id('restoreButton').disabled=true;
+		toggleDialog('dataDialog',true);
 	}
 }
 function save() {
@@ -306,38 +292,35 @@ function save() {
     */
 	console.log('data saved to LogbookData');
 }
-id('backupButton').addEventListener('click',function() {toggleDialog('dataDialog',false); backup();});
-id('restoreButton').addEventListener('click',function() {toggleDialog('restoreDialog',true)});
-id("fileChooser").addEventListener('change',function() {
-    var file=id('fileChooser').files[0];
-    console.log("file: "+file+" name: "+file.name);
-    var fileReader=new FileReader();
-    fileReader.addEventListener('load', function(evt) {
-	    console.log("file read: "+evt.target.result);
-    	var data=evt.target.result;
-    	var json=JSON.parse(data);
-    	logs=json.logs;
-    	/*
-    	console.log("json: "+json);
-    	logs=[];
-    	for(var i=0;i<json.logs.length;i++) { // discard redundant log IDs
-    		logs[i]={};
-    		logs[i].tags=json.logs[i].tags;
-    		logs[i].date=json.logs[i].date;
-    		logs[i].days=json.logs[i].days;
-    		logs[i].text=json.logs[i].text;
-    		console.log('log '+i+': '+logs[i].text);
-    	}
-    	*/
-    	console.log(logs.length+" logs loaded");
-    	logData=JSON.stringify(logs);
-    	save();
-    	toggleDialog('restoreDialog',false);
-    	load();
-    });
-    fileReader.readAsText(file);
+id('backupButton').addEventListener('click',backup);
+id('restoreButton').addEventListener('click',function() {
+	var event = new MouseEvent('click',{
+		bubbles: true,
+		cancelable: true,
+		view: window
+	});
+	fileChooser.dispatchEvent(event);
+	fileChooser.onchange=(event)=>{
+		var file=id('fileChooser').files[0];
+    	console.log("file name: "+file.name);
+    	var fileReader=new FileReader();
+    	fileReader.addEventListener('load', function(evt) {
+			console.log("file read: "+evt.target.result);
+    		var data=evt.target.result;
+    		var json=JSON.parse(data);
+    		logs=json.logs;
+			console.log(logs.length+" logs loaded");
+			logData=JSON.stringify(logs);
+    		save();
+    		console.log('data imported and saved');
+    		load();
+    	});
+    	fileReader.readAsText(file);
+	}
+	id('dataMessage').innerText='';
+	id('backupButton').disabled=false;
+	toggleDialog('dataDialog',false);
 });
-id('confirmBackup').addEventListener('click',function() {toggleDialog('backupDialog',false); backup();});
 function backup() {
   	console.log("save backup");
   	var fileName="LogbookData.json"
@@ -354,7 +337,9 @@ function backup() {
    	a.download=fileName;
     document.body.appendChild(a);
     a.click();
-	display(fileName+" saved to downloads folder");
+    id('dataMessage').innerText='';
+    id('restoreButton').disbaled=false;
+    toggleDialog('dataDialog',false);
 }
 // START-UP CODE
 backupDay=window.localStorage.getItem('backupDay');
