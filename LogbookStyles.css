@@ -222,6 +222,15 @@ textarea {
     font-size: 1.5em;
     font-weight: bold;
 }
+#curtain {
+	position: fixed;
+	left:0;
+	top:0;
+	width: 100%;
+	height: 0;
+	background-color: #444;
+	opacity: 0.6;
+}
 #buttonSearch {
     width: 24px;
     height: 24px;
