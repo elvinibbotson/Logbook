@@ -18,7 +18,6 @@ var findTag=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var backupDay;
-// var root; // OPFS root directory
 // SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
     // console.log(event.changedTouches.length+" touches");
@@ -53,15 +52,6 @@ id('findTagChooser').addEventListener('change',function() {
 	populateList();
 	toggleDialog('findDialog',false);
 })
-/* EXECUTE SEARCH
-id('buttonStartSearch').addEventListener('click', function() {
-	searchTag=tags[id('findTagChooser').selectedIndex];
-	searchText=id('searchTextField').value;
-	console.log("search by tag "+searchTag+"/text: "+searchText);
-	populateList();
-    toggleDialog('searchDialog', false);
-});
-*/
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -209,11 +199,6 @@ function populateList() {
 				console.log("find tag match in "+logs[i].text);
 				list.push(i);
 			}
-			/* else if(searchText && (logs[i].text.indexOf(searchText)>=0))
-			{
-				console.log("search text match in "+logs[i].text);
-				list.push(i);
-			} */
 		}
 		else { // no search - list all logs
 			console.log("no search");
@@ -264,7 +249,6 @@ function load() {
 	// build tag list
 	tags=[];
 	for(var i=0;i<logs.length;i++) {
-		// console.log('log '+i+' has '+logs[i].tags.length+' tags');
 		for(var j in logs[i].tags) { // for each tag in each log...
 			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
 				tags.push(logs[i].tags[j]); // ...add it
@@ -301,13 +285,6 @@ function load() {
 function save() {
 	var json=JSON.stringify(logs);
 	window.localStorage.setItem('LogbookData',json);
-	/* OLD OPFS METHOD
-	var handle=await root.getFileHandle('LogbookData',{create:true});
-	var data=JSON.stringify(logs);
-	var writable=await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-    */
 	console.log('data saved to LogbookData');
 }
 id('backupButton').addEventListener('click',backup);
