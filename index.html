@@ -13,21 +13,25 @@
 <header class="header">
     <div id="heading">
         <span id="headerTitle">Logbook</span>
-        <button id="buttonSearch"></button>
+        <!--button id="buttonSearch"></button-->
     </div>
 </header>
 <main id="main">
 	<ul id="list" class="logList"></ul>
+<div id='buttonFind' class='round-button'></div>
 <div id='buttonNew' class='round-button'></div>
 <div id='curtain'></div>
-<div id="searchDialog" class="dialog">
+<div id='findDialog' class='dialog'>
+	find <select id="findTagChooser"></select>
+</div>
+<!--div id="searchDialog" class="dialog">
 	<div class="dialog-title">Search</div>
 	<div class="dialog-body">by tag: <select id="searchTagChooser"></select>
 	<p>by text: <input type="text" id="searchTextField" size="10"/></p></div>
 	<div class="dialog-buttons">
 		<button id="buttonStartSearch" class="search-button"></button>
 	</div>
-</div>
+</div-->
 <div id="logDialog" class="dialog">
     <div class="dialog-body">date <input type="date" id="logDateField"/> <input type="number" id="logDaysField" width="32"/> days</div>
     <div class="dialog-body"> <textarea id="logTextField"></textarea>

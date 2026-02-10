@@ -48,8 +48,8 @@ input {
 }
 select {
 	border: solid white 1px;
-	color: yellow;
-	background-color: blue;
+	color: white;
+	background-color: gray;
 }
 textarea {
 	width: 100%;
@@ -85,7 +85,6 @@ textarea {
 .round-button {
 	display: block;
 	position: fixed;
-	right: 20px;
 	bottom: 20px;
 	width: 50px;
 	height: 50px;
@@ -231,23 +230,19 @@ textarea {
 	background-color: #444;
 	opacity: 0.6;
 }
-#buttonSearch {
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin-right: 30px;
-    background-color: black;
+#buttonFind {
+    left: 20px;
     border: none;
-    background: url(search24px.svg) center center no-repeat;
-    z-index: 1000;
+    background: url(find.svg) center center no-repeat;
  }
+/*
 #buttonStartSearch {
 	margin: 20px;
 	float: right;
 }
+*/
 #buttonNew {
 	right: 20px;
-	bottom: 20px;
 	background: url(add.svg) center center no-repeat;
 }
 #logDateField {

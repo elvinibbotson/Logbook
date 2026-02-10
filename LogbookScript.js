@@ -13,8 +13,8 @@ var list=[]; // listed logs
 var log=null;
 var logIndex=null;
 var tags=[];
-var searchTag=null;
-var searchText=null;
+var findTag=null;
+// var searchText=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var backupDay;
@@ -31,26 +31,37 @@ id('main').addEventListener('touchend', function(event) {
     drag.y=dragStart.y-event.changedTouches[0].clientY;
     if(Math.abs(drag.y)>50) return; // ignore vertical drags
     if((drag.x>50)&&(currentDialog)) toggleDialog(currentDialog,false); // drag left to close dialogs
+    else if(drag.x<-50) { // return from find list
+    	findTag=null;
+    	populateList();
+    }
 })
 // TAP ON HEADER
 id('headerTitle').addEventListener('click',function() {
 	toggleDialog('dataDialog',true);
 });
-// SEARCH BUTTON
-id('buttonSearch').addEventListener('click', function() { // show the search dialog
-	toggleDialog('searchDialog',true);
-	id('searchTagChooser').selectedIndex=-1;
-	id('searchTextField').value="";
-	console.log('search - tags: '+id('searchTagChooser').options.length);
+// getFileHandle BUTTON
+id('buttonFind').addEventListener('click', function() { // show the search dialog
+	toggleDialog('findDialog',true);
+	id('findTagChooser').selectedIndex=-1;
+	// id('searchTextField').value="";
+	console.log('find - tags: '+id('findTagChooser').options.length);
 });
-// EXECUTE SEARCH
+id('findTagChooser').addEventListener('change',function() {
+	findTag=tags[id('findTagChooser').selectedIndex];
+	console.log('find items with tag '+findTag);
+	populateList();
+	toggleDialog('findDialog',false);
+})
+/* EXECUTE SEARCH
 id('buttonStartSearch').addEventListener('click', function() {
-	searchTag=tags[id('searchTagChooser').selectedIndex];
+	searchTag=tags[id('findTagChooser').selectedIndex];
 	searchText=id('searchTextField').value;
 	console.log("search by tag "+searchTag+"/text: "+searchText);
 	populateList();
     toggleDialog('searchDialog', false);
 });
+*/
 // NEW BUTTON
 id('buttonNew').addEventListener('click', function() { // show the log dialog
 	console.log("show add jotting dialog with today's date, 1 day duration, blank text field and delete button disabled");
@@ -95,7 +106,7 @@ id('newTagField').addEventListener('change', function() {
 		id('tagChooser').options.add(opt);
 		opt=document.createElement('option');
 		opt.text=tag;
-		id('searchTagChooser').options.add(opt);
+		id('findTagChooser').options.add(opt);
 		log.tags.push(tag);
 		console.log(tag+' added to tag list, tag search and log tags');
 		listLogTags();
@@ -130,15 +141,19 @@ id('buttonDeleteLog').addEventListener('click', function() {
 	populateList();
 });
 // SHOW/HIDE DIALOGS
-function  toggleDialog(d, visible) {
+function toggleDialog(d, visible) {
     console.log('toggle '+d+' - '+visible);
     if(currentDialog) id(currentDialog).style.display='none';
     if(visible) {
     	currentDialog=d;
     	id(d).style.display='block';
     	id('buttonNew').style.display='none';
+    	id('buttonFind').style.display='none';
     }
-    else id('buttonNew').style.display='block';
+    else {
+    	id('buttonNew').style.display=(findTag)?'none':'block';
+    	id('buttonFind').style.display=(findTag)?'none':'block';
+    }
     id('curtain').style.height=(visible)?'100%':'0';
 }
 // OPEN SELECTED LOG FOR EDITING
@@ -182,23 +197,23 @@ function listLogTags() {
 }
 // POPULATE LOGS LIST
 function populateList() {
-	console.log("populate log list for search "+searchTag+"/"+searchText);
-	if(searchTag || searchText) id('headerTitle').textContent=searchTag+"/"+searchText;
+	console.log("populate log list for search "+findTag);
+	if(findTag) id('headerTitle').textContent=findTag;
 	else id('headerTitle').textContent='Logbook';
 	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	list=[];
 	for(var i=0;i<logs.length;i++) { // build list of logs to show
-		if(searchTag || searchText) { // list logs matching search
-			if(searchTag && (logs[i].tags.indexOf(searchTag)>=0))
+		if(findTag) { // list logs matching search
+			if(logs[i].tags.indexOf(findTag)>=0)
 			{
-				console.log("search tag match in "+logs[i].text);
+				console.log("find tag match in "+logs[i].text);
 				list.push(i);
 			}
-			else if(searchText && (logs[i].text.indexOf(searchText)>=0))
+			/* else if(searchText && (logs[i].text.indexOf(searchText)>=0))
 			{
 				console.log("search text match in "+logs[i].text);
 				list.push(i);
-			}
+			} */
 		}
 		else { // no search - list all logs
 			console.log("no search");
@@ -231,6 +246,8 @@ function populateList() {
 		listItem.innerHTML=html;
 		id('list').appendChild(listItem);
   	}
+  	id('buttonNew').style.display=(findTag)?'none':'block';;
+  	id('buttonFind').style.display=(findTag)?'none':'block';
 }
 // DATA
 function load() {
@@ -266,12 +283,12 @@ function load() {
 		stag.text=tags[i];
 		stag=document.createElement('option');
 		stag.text=tags[i];
-		id('searchTagChooser').options.add(stag);
+		id('findTagChooser').options.add(stag);
 	}
 	tag=document.createElement('option');
 	tag.text='+NEW';
 	id('tagChooser').options.add(tag);
-	console.log('search tags: '+id('searchTagChooser').options.length);
+	console.log('search tags: '+id('findTagChooser').options.length);
 	populateList();
 	var today=Math.floor(new Date().getTime()/86400000);
 	var days=today-backupDay;
