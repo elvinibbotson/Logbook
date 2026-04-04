@@ -18,7 +18,7 @@ var findTag=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var backupDay;
-// SWIPE LEFT TO CLOSE DIALOGS
+/* SWIPE LEFT TO CLOSE DIALOGS
 id('main').addEventListener('touchstart', function(event) {
     // console.log(event.changedTouches.length+" touches");
     dragStart.x=event.changedTouches[0].clientX;
@@ -35,6 +35,7 @@ id('main').addEventListener('touchend', function(event) {
     	populateList();
     }
 })
+*/
 // TAP ON HEADER
 id('headerTitle').addEventListener('click',function() {
 	toggleDialog('dataDialog',true);
@@ -130,6 +131,10 @@ id('buttonDeleteLog').addEventListener('click', function() {
 	save();
 	populateList();
 });
+// CLOSE DIALOG
+id('curtain').addEventListener('click',function() {
+	toggleDialog(currentDialog,false);
+})
 // SHOW/HIDE DIALOGS
 function toggleDialog(d, visible) {
     console.log('toggle '+d+' - '+visible);
